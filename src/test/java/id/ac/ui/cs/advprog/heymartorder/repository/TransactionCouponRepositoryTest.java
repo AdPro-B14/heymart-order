@@ -79,15 +79,15 @@ public class TransactionCouponRepositoryTest {
         TransactionCoupon result = transactionCouponRepository.save(tcCoupon);
 
         // Retrieve the product
-        Iterator<TransactionCoupon> productIterator = TransactionCouponRepository.findAll();
-        assertTrue(productIterator.hasNext()); // Assert true initially
-        TransactionCoupon savedProduct = productIterator.next();
+        List<TransactionCoupon> tcList = transactionCouponRepository.findAll();
+        assertEquals(tcList.getFirst().getCouponId(), tcCoupon.getCouponId()); // Assert true initially
+        TransactionCoupon savedProduct = tcList.getFirst();
         assertEquals(tcCoupon.getCouponId(), savedProduct.getCouponId());
 
         // Delete the product
         transactionCouponRepository.delete(result);
-        productIterator = transactionCouponRepository.findAll();
-        assertFalse(productIterator.hasNext()); // Assert false because the product should already be removed
+        tcList = transactionCouponRepository.findAll();
+        assertTrue(tcList.isEmpty()); // Assert false because the product should already be removed
     }
 
     @Test
@@ -98,8 +98,8 @@ public class TransactionCouponRepositoryTest {
         TransactionCoupon tcCoupon2 = tcCoupons.get(1);
         transactionCouponRepository.delete(tcCoupon2);
 
-        Iterator<TransactionCoupon> productIterator = transactionCouponRepository.findAll();
-        assertTrue(productIterator.hasNext()); // Assert true because the first product should still exist
+        List<TransactionCoupon> tcList = transactionCouponRepository.findAll();
+        assertFalse(tcList.isEmpty()); // Assert true because the first product should still exist
     }
 
 }
