@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
+import id.ac.ui.cs.advprog.heymartorder.factory.CouponFactory;
+import id.ac.ui.cs.advprog.heymartorder.factory.TransactionCouponFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
-public class CouponTest {
+public class TransactionCouponTest {
 
     private List<TransactionCoupon> tcCoupons;
     @BeforeEach

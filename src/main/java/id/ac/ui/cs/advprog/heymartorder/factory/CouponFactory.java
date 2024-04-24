@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.heymartorder.model;
+package id.ac.ui.cs.advprog.heymartorder.factory;
 
 import id.ac.ui.cs.advprog.heymartorder.model.Coupon;
 
