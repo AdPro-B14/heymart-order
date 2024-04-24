@@ -91,7 +91,7 @@ public class TransactionCouponRepositoryTest {
     }
 
     @Test
-    void testDeleteNegative() {
+    void testDeleteIfWrongTransactionCoupon() {
         TransactionCoupon tcCoupon1 = tcCoupons.getFirst();
         TransactionCoupon result = transactionCouponRepository.save(tcCoupon1);
 
