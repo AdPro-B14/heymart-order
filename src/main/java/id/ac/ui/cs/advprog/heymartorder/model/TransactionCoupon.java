@@ -5,12 +5,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TransactionCoupon implements Coupon{
+public class TransactionCoupon extends Coupon{
+
+    long minimumBuy;
+
+    @Getter
+    boolean used;
 
 
-    @Override
     public void prepare() {
 
     }
-
 }
