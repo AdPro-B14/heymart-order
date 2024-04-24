@@ -8,21 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import id.ac.ui.cs.advprog.heymartorder.model.Coupon;
+import id.ac.ui.cs.advprog.heymartorder.model.CouponFactory;
+import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
+import id.ac.ui.cs.advprog.heymartorder.model.TransactionCouponFactory;
+
 
 public class CouponTest {
 
     @BeforeEach
     void setUp() {
-        this.coupons = new ArrayList<>();
         CouponFactory transactionCouponFactory = new TransactionCouponFactory();
-        Coupon transactionCoupon = new transactionCouponFactory.orderCoupon()
-                .setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd6").setName("Kupon 4.4.24")
+        Coupon transactionCoupon = new TransactionCouponFactory().orderCoupon();
+        transactionCoupon.setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd6").setName("Kupon 4.4.24")
                 .setNominal(50000L);
     }
 
     @Test
     void testGetCouponId() {
-        assertEquals(5, transactionCoupon.getId);
+        assertEquals(5, transactionCoupon.getId());
     }
 
     @Test
