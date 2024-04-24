@@ -20,11 +20,11 @@ public class TransactionCouponTest {
 
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
-        TransactionCoupon transactionCoupon1 = (TransactionCoupon) transactionCouponFactory
+        TransactionCoupon transactionCoupon1 = transactionCouponFactory
                 .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
                         10000L, false, 50000L);
 
-        TransactionCoupon transactionCoupon2 = (TransactionCoupon) transactionCouponFactory
+        TransactionCoupon transactionCoupon2 = transactionCouponFactory
                 .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd7", "Kupon Ramadhan Sale",
                         50000L, false, 100000L);
 
