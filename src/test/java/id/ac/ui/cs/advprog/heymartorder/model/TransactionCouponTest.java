@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-import id.ac.ui.cs.advprog.heymartorder.factory.CouponFactory;
 import id.ac.ui.cs.advprog.heymartorder.factory.TransactionCouponFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,22 +18,16 @@ public class TransactionCouponTest {
     void setUp() {
         this.tcCoupons = new ArrayList<>();
 
-        CouponFactory transactionCouponFactory = new TransactionCouponFactory();
+        TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
-        TransactionCoupon transactionCoupon1 = (TransactionCoupon) transactionCouponFactory.orderCoupon();
-        transactionCoupon1.setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        transactionCoupon1.setCouponName("Kupon 4.4.24");
-        transactionCoupon1.setCouponNominal(10000L);
-        transactionCoupon1.setMinimumBuy(50000L);
-        transactionCoupon1.setUsed(false);
+        TransactionCoupon transactionCoupon1 = (TransactionCoupon) transactionCouponFactory
+                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
+                        10000L, false, 50000L);
 
+        TransactionCoupon transactionCoupon2 = (TransactionCoupon) transactionCouponFactory
+                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd7", "Kupon Ramadhan Sale",
+                        50000L, false, 100000L);
 
-        TransactionCoupon transactionCoupon2 = (TransactionCoupon) transactionCouponFactory.orderCoupon();
-        transactionCoupon2.setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd7");
-        transactionCoupon2.setCouponName("Kupon Ramadhan Sale");
-        transactionCoupon2.setCouponNominal(50000L);
-        transactionCoupon2.setMinimumBuy(100000L);
-        transactionCoupon2.setUsed(false);
 
         tcCoupons.add(transactionCoupon1);
         tcCoupons.add(transactionCoupon2);
@@ -63,7 +56,7 @@ public class TransactionCouponTest {
 
     @Test
     void testGetCouponIsUsed() {
-        assertFalse(tcCoupons.getFirst().used);
+        assertFalse(tcCoupons.getFirst().isUsed);
     }
 
 }

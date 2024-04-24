@@ -8,7 +8,17 @@ import lombok.Setter;
 public abstract class Coupon {
     String couponId;
     String couponName;
-    Long couponNominal;
+    long couponNominal;
+    long minimumBuy;
+    boolean isUsed;
+    String productId;
+
+    Coupon(String couponId, String couponName, long couponNominal) {
+        this.couponId = couponId;
+        this.couponName = couponName;
+        this.couponNominal = couponNominal;
+    }
+
     public abstract void prepare();
 
 }
