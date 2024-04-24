@@ -14,7 +14,7 @@ public class KeranjangBelanjaTest {
 
     @BeforeEach
     void setUp() {
-        keranjangBelanja = new KeranjangBelanja();
+        keranjangBelanja = new KeranjangBelanja("supermarketId", null);
     }
     @Test
     void testProductMap() {
