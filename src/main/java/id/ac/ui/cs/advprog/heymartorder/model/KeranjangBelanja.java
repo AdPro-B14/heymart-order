@@ -1,39 +1,26 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.HashMap;
 
-@Builder
+@Data
+@Entity
+@Table(name = "keranjangbelanja")
 @Getter
 public class KeranjangBelanja {
-    String supermarketId;
-    HashMap<String, Integer> productMap;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Builder
-    public KeranjangBelanja(String supermarketId, HashMap<String, Integer> productMap) {
-        this.supermarketId = supermarketId;
-        this.productMap = new HashMap<>();
-    }
+    @Setter
+    private String supermarketId;
 
-    public void setSupermarketId(String supermarketId) {
-        if (supermarketId == null) {
-            throw new IllegalArgumentException("");
-        }
-        this.supermarketId = supermarketId;
-    }
+    @Setter @ElementCollection
+    private HashMap<String, Integer> productMap;
 
-    public void setProductMap(HashMap<String, Integer> productMap) {
-        if (productMap != null) {
-            for (HashMap.Entry<String, Integer> entry : productMap.entrySet()) {
-                if (entry.getKey() == null) {
-                    throw new IllegalArgumentException("");
-                }
-            }
-        }
-        this.productMap = productMap;
+    public static KeranjangBelanjaBuilder getBuilder() {
+        return new KeranjangBelanjaBuilder();
     }
 }
