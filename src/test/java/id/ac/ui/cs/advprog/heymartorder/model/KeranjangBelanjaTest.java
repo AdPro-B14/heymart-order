@@ -14,36 +14,41 @@ public class KeranjangBelanjaTest {
 
     @BeforeEach
     void setUp() {
-        keranjangBelanja = new KeranjangBelanja("supermarketId", null);
-    }
-    @Test
-    void testProductMap() {
         HashMap<String, Integer> productMap = new HashMap<>();
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
-        keranjangBelanja.setProductMap(productMap);
+        keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setSupermarketId("supermarket-id")
+                .setProductMap(productMap)
+                .build();
+    }
+
+    @Test
+    void testBuilderValid() {
+        HashMap<String, Integer> productMap = new HashMap<>();
+        productMap.put("produk-1", 5);
+        productMap.put("produk-2", 3);
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setSupermarketId("supermarket-id")
+                .setProductMap(productMap)
+                .build();
+
+        assertEquals("supermarket-id", keranjangBelanja.getSupermarketId());
         assertEquals(productMap, keranjangBelanja.getProductMap());
     }
 
     @Test
-    void testEmptyProductMap() {
-        keranjangBelanja.setProductMap(new HashMap<>());
-        assertTrue(keranjangBelanja.getProductMap().isEmpty());
-    }
-
-    @Test
     void testNullSupermarketId() {
+        HashMap<String, Integer> productMap = new HashMap<>();
+        productMap.put("produk-1", 5);
+        productMap.put("produk-2", 3);
+
         assertThrows(IllegalArgumentException.class, () -> {
-            keranjangBelanja.setSupermarketId(null);
+            new KeranjangBelanjaBuilder()
+                    .setSupermarketId(null) // Setting null supermarketId
+                    .setProductMap(productMap)
+                    .build();
         });
     }
 
-    @Test
-    void testSetNullProductId() {
-        HashMap<String, Integer> productMap = new HashMap<>();
-        productMap.put(null, 5);
-        assertThrows(IllegalArgumentException.class, () -> {
-            keranjangBelanja.setProductMap(productMap);
-        });
-    }
 }
