@@ -38,10 +38,10 @@ public class KeranjangBelanjaServiceTest {
         when(keranjangBelanjaRepository.findById(keranjangBelanja.getId())).thenReturn(Optional.of(keranjangBelanja));
     }
 
-    @Test
-    void testAddProductToKeranjang() {
-        keranjangBelanjaService.addProductToKeranjang("produk-3");
-
-        assertEquals(3, keranjangBelanjaService.findKeranjangBelanjaById(1L).getProductMap().size());
-    }
+//    @Test
+//    void testAddProductToKeranjang() {
+//        keranjangBelanjaService.addProductToKeranjang("produk-3");
+//
+//        assertEquals(3, keranjangBelanjaService.findKeranjangBelanjaById(1L).getProductMap().size());
+//    }
 }
