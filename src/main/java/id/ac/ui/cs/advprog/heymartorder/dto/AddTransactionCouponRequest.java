@@ -2,9 +2,9 @@ package id.ac.ui.cs.advprog.heymartorder.dto;
 
 public class AddTransactionCouponRequest {
     public String couponId;
-    String couponName;
-    long couponNominal;
-    long minimumBuy;
-    boolean isUsed;
-    String productId;
+    public String couponName;
+    public long couponNominal;
+    public long minimumBuy;
+    public boolean isUsed;
+    public String productId;
 }
