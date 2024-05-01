@@ -3,10 +3,10 @@ package id.ac.ui.cs.advprog.heymartorder.model;
 import java.util.HashMap;
 
 public class KeranjangBelanjaBuilder {
-    String supermarketId;
+    Long supermarketId;
     HashMap<String, Integer> productMap;
 
-    public KeranjangBelanjaBuilder setSupermarketId(String supermarketId) {
+    public KeranjangBelanjaBuilder setSupermarketId(Long supermarketId) {
         if (supermarketId == null)
             throw new IllegalArgumentException();
         this.supermarketId = supermarketId;

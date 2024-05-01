@@ -18,7 +18,7 @@ public class KeranjangBelanjaTest {
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
         keranjangBelanja = new KeranjangBelanjaBuilder()
-                .setSupermarketId("supermarket-id")
+                .setSupermarketId(1L)
                 .setProductMap(productMap)
                 .build();
     }
@@ -29,11 +29,11 @@ public class KeranjangBelanjaTest {
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
         KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
-                .setSupermarketId("supermarket-id")
+                .setSupermarketId(1L)
                 .setProductMap(productMap)
                 .build();
 
-        assertEquals("supermarket-id", keranjangBelanja.getSupermarketId());
+        assertEquals(1L, keranjangBelanja.getSupermarketId());
         assertEquals(productMap, keranjangBelanja.getProductMap());
     }
 

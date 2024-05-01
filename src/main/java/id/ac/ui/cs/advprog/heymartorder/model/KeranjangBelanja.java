@@ -15,7 +15,7 @@ public class KeranjangBelanja {
     private Long id;
 
     @Setter
-    private String supermarketId;
+    private Long supermarketId;
 
     @Setter @ElementCollection
     private HashMap<String, Integer> productMap;
