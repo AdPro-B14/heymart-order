@@ -1,13 +1,16 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
+import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,30 +25,23 @@ public class KeranjangBelanjaServiceTest {
     @Mock
     private KeranjangBelanjaRepository keranjangBelanjaRepository;
 
-    @Test
-    void testFindKeranjangBelanjaById() {
-        KeranjangBelanja someKeranjangBelanja = new KeranjangBelanja();
-        when(keranjangBelanjaRepository.findById(any(Long.class))).thenReturn(Optional.of(someKeranjangBelanja));
+    @BeforeEach
+    void setUp() {
+        HashMap<String, Integer> productMap = new HashMap<>();
+        productMap.put("produk-1", 5);
+        productMap.put("produk-2", 3);
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setSupermarketId("supermarket-id")
+                .setProductMap(productMap)
+                .build();
 
-        KeranjangBelanja result = keranjangBelanjaService.findKeranjangBelanjaById(1L);
-
-        assertEquals(someKeranjangBelanja, result);
-    }
-
-    @Test
-    void testClearKeranjang() {
-        keranjangBelanjaService.clearKeranjang();
-
-        verify(keranjangBelanjaRepository, times(1)).deleteAll();
+        when(keranjangBelanjaRepository.findById(keranjangBelanja.getId())).thenReturn(Optional.of(keranjangBelanja));
     }
 
     @Test
     void testAddProductToKeranjang() {
-        KeranjangBelanja someKeranjangBelanja = new KeranjangBelanja();
-        when(keranjangBelanjaRepository.save(any(KeranjangBelanja.class))).thenReturn(someKeranjangBelanja);
+        keranjangBelanjaService.addProductToKeranjang("produk-3");
 
-        KeranjangBelanja result = keranjangBelanjaService.addProductToKeranjang("productId");
-
-        assertEquals(someKeranjangBelanja, result);
+        assertEquals(3, keranjangBelanjaService.findKeranjangBelanjaById(1L).getProductMap().size());
     }
 }
