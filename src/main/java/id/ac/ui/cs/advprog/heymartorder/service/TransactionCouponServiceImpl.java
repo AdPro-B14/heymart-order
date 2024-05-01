@@ -39,6 +39,6 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
 
     @Override
     public List<TransactionCoupon> findAll() {
-        return null;
+        return transactionCouponRepository.findAll();
     }
 }
