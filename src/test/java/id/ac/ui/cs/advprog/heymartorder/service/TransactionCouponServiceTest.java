@@ -105,4 +105,16 @@ public class TransactionCouponServiceTest {
         doReturn(null).when(transactionCouponRepository).findById("zczc");
         assertNull(transactionCouponRepository.findById("zczc"));
     }
+
+    @Test
+    void testFindAll() {
+        TransactionCoupon tcCoupon = tcCoupons.get(1);
+        doReturn(tcCoupons).when(transactionCouponRepository).findAll();
+
+        List<TransactionCoupon> results = transactionCouponService.findAll();
+        for (int i = 0; i< results.size(); i++) {
+            assertEquals(tcCoupons.get(i).getCouponId(), results.get(i).getCouponId());
+        }
+        assertEquals(2, results.size());
+    }
 }
