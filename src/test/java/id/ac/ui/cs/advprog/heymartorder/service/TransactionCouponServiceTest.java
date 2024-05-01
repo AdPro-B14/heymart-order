@@ -59,7 +59,7 @@ public class TransactionCouponServiceTest {
         doReturn(tcCoupon).when(transactionCouponRepository).findById(tcCoupon.getCouponId());
 
         assertNull(transactionCouponService.createTransactionCoupon(tcCoupon));
-        verify(transactionCouponRepository, times(1)).save(tcCoupon);
+        verify(transactionCouponRepository, times(0)).save(tcCoupon);
 
     }
 
@@ -88,7 +88,7 @@ public class TransactionCouponServiceTest {
         assertThrows(NoSuchElementException.class,
                 () -> transactionCouponService.updateIsUsed("foobar", true));
 
-        verify(transactionCouponRepository, times(1)).save(any(TransactionCoupon.class));
+        verify(transactionCouponRepository, times(0)).save(any(TransactionCoupon.class));
     }
 
     @Test
