@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.dto;
 
-public class AddTransactonCouponRequest {
+public class AddTransactionCouponRequest {
     public String couponId;
     String couponName;
     long couponNominal;
