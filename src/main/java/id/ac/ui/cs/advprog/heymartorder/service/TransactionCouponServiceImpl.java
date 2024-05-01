@@ -36,4 +36,9 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     public TransactionCoupon findById(String couponId) {
         return transactionCouponRepository.findById(couponId);
     }
+
+    @Override
+    public List<TransactionCoupon> findAll() {
+        return null;
+    }
 }
