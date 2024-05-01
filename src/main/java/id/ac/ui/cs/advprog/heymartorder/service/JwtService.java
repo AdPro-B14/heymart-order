@@ -20,8 +20,12 @@ public class JwtService {
     @Value("${jwt.expire-duration}")
     private Long EXPIRE_DURATION;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public Long extractUserId(String token) {
+        return Long.parseLong(extractClaim(token, Claims::getSubject));
+    }
+
+    public String extractEmail(String token) {
+        return String.valueOf(extractAllClaims(token).get("email"));
     }
 
     public String extractRole(String token) {
@@ -29,8 +33,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        final Long userId = extractUserId(token);
+        return userId == Long.parseLong(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpired(String token) {
