@@ -1,9 +1,23 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-public class CustomerBalance extends Balance {
-    Customer customer;
+import jakarta.persistence.*;
+import lombok.*;
 
-    public CustomerBalance(Customer customer) {
-        this.customer = customer;
-    }
+import java.math.BigDecimal;
+
+@Data
+@Entity
+@Table(name = "customer_balance")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class CustomerBalance {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+
+    Long customerId;
+
+    BigDecimal amount;
 }

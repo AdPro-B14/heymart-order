@@ -1,9 +1,23 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-public class SupermarketBalance extends Balance {
-    Supermarket supermarket;
+import jakarta.persistence.*;
+import lombok.*;
 
-    public SupermarketBalance (Supermarket supermarket) {
-        this.supermarket = supermarket;
-    }
+import java.math.BigDecimal;
+
+@Data
+@Entity
+@Table(name = "supermarket_balance")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class SupermarketBalance {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+
+    Long supermarketId;
+
+    BigDecimal amount;
 }
