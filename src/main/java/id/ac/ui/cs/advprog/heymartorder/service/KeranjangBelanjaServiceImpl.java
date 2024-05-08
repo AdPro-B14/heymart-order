@@ -15,18 +15,15 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
 
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
-        KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
-                .setSupermarketId(null)
-                .setProductMap(new HashMap<String, Integer>())
-                .build();
-
-        return keranjangBelanja;
+        return new KeranjangBelanjaBuilder()
+            .setSupermarketId(null)
+            .setProductMap(new HashMap<String, Integer>())
+            .build();
     }
 
     @Override
     public KeranjangBelanja findKeranjangById(Long userId) {
-        KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
-        return keranjangBelanja;
+        return keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
     }
 
     @Override
@@ -38,24 +35,36 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     }
 
     @Override
-    public KeranjangBelanja addProductToKeranjang(Long userId, String productId) {
+    public KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         HashMap<String, Integer> productMap = keranjangBelanja.getProductMap();
-        if (productMap.containsKey(productId)) {
-            productMap.put(productId, productMap.get(productId) + 1);
+        if (keranjangBelanja.getSupermarketId() == null) {
+            keranjangBelanja.setSupermarketId(supermarketId);
         } else {
-            productMap.put(productId, 1);
+            if (keranjangBelanja.getSupermarketId().equals(supermarketId)) {
+                if (productMap.containsKey(productId)) {
+                    productMap.put(productId, productMap.get(productId) + 1);
+                } else {
+                    productMap.put(productId, 1);
+                }
+            }
+            else {
+                return null;
+                // todo tambahin error
+            }
         }
         return keranjangBelanja;
     }
 
     @Override
     public Integer countTotal(HashMap<String, Integer> productMap) {
+        // todo perlu harga dari produk
         return null;
     }
 
     @Override
     public boolean checkout() {
+        // todo kurangin stok
         return false;
     }
 }
