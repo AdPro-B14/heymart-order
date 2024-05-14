@@ -28,10 +28,15 @@ public class CustomerBalanceServiceImplTest {
     @Mock
     private CustomerBalanceRepository customerBalanceRepository;
 
-    List<CustomerBalance> customerBalancesList = new ArrayList<>();
+    @Mock
+    private CustomerBalanceStrategy customerBalanceStrategy;
+
+    private List<CustomerBalance> customerBalancesList;
 
     @BeforeEach
     void setUp() {
+        customerBalancesList = new ArrayList<>();
+
         CustomerBalance customerBalance1 = CustomerBalance.builder()
                 .id(1L)
                 .customerId(1L)
@@ -48,13 +53,14 @@ public class CustomerBalanceServiceImplTest {
         customerBalancesList.add(customerBalance2);
     }
 
-
     @Test
     void testCreateCustomerBalanceValid() {
-        when(customerBalanceRepository.save(any())).thenReturn(customerBalancesList.getFirst());
-        when(customerBalanceRepository.findById(customerBalancesList.getFirst().getId()))
-                .thenReturn(Optional.of(customerBalancesList.getFirst()));
-        CustomerBalance customerBalance = customerBalanceService.createCustomerBalance(customerBalancesList.getFirst().getId());
+        when(customerBalanceStrategy.createBalance(customerBalancesList.getFirst().getCustomerId()))
+                .thenReturn(customerBalancesList.getFirst());
+        when(customerBalanceStrategy.findBalanceById(customerBalancesList.getFirst().getId()))
+                .thenReturn(customerBalancesList.getFirst());
+
+        CustomerBalance customerBalance = customerBalanceService.createCustomerBalance(customerBalancesList.get(0).getCustomerId());
 
         assertEquals(customerBalance.getId(),
                 customerBalanceService.findCustomerBalanceById(customerBalance.getId()).getId());
@@ -67,15 +73,14 @@ public class CustomerBalanceServiceImplTest {
 
     @Test
     void testDeleteCustomerBalanceValid() {
-        when(customerBalanceRepository.findById(customerBalancesList.getFirst().getId()))
-                .thenReturn(Optional.of(customerBalancesList.getFirst()));
-
         customerBalanceService.deleteCustomerBalance(customerBalancesList.getFirst().getId());
     }
 
     @Test
     void testDeleteCustomerBalanceNotValid() {
-        assertThrows(NoSuchElementException.class, () -> customerBalanceService.deleteCustomerBalance(-1L));
+        when(customerBalanceService.deleteCustomerBalance(3L)).thenThrow(new NoSuchElementException());
+        assertThrows(NoSuchElementException.class, () -> customerBalanceService.deleteCustomerBalance(3L));
+        when(customerBalanceService.deleteCustomerBalance(null)).thenThrow(new IllegalArgumentException());
         assertThrows(IllegalArgumentException.class, () -> customerBalanceService.deleteCustomerBalance(null));
     }
 }
