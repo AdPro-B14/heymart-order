@@ -2,43 +2,54 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.model.CustomerBalance;
 import id.ac.ui.cs.advprog.heymartorder.repository.CustomerBalanceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-
+@Service
 public class CustomerBalanceServiceImpl implements CustomerBalanceService {
+    private final CustomerBalanceRepository customerBalanceRepository;
+    private final BalanceStrategy<CustomerBalance> balanceStrategy;
 
-    CustomerBalanceRepository customerBalanceRepository;
-
+    @Autowired
+    public CustomerBalanceServiceImpl(CustomerBalanceRepository customerBalanceRepository, BalanceStrategy<CustomerBalance> balanceStrategy) {
+        this.customerBalanceRepository = customerBalanceRepository;
+        this.balanceStrategy = balanceStrategy;
+    }
     @Override
     public CustomerBalance createCustomerBalance(Long customerId) {
-        if (customerId == null) {
-            throw new IllegalArgumentException();
-        }
-        CustomerBalance customerBalance = new CustomerBalance();
-        customerBalance.setCustomerId(customerId);
-        customerBalance.setAmount(BigDecimal.ZERO);
-
-        return customerBalanceRepository.save(customerBalance);
+        return balanceStrategy.createBalance(customerId);
     }
 
     @Override
-    public void deleteCustomerBalance(Long id) {
-        CustomerBalance customerBalance = findCustomerBalanceById(id);
-        customerBalanceRepository.delete(customerBalance);
+    public CustomerBalance deleteCustomerBalance(Long id) {
+        return balanceStrategy.deleteBalance(id);
     }
 
     @Override
     public CustomerBalance findCustomerBalanceById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException();
-        }
-        return customerBalanceRepository.findById(id).orElseThrow();
+        return balanceStrategy.findBalanceById(id);
+    }
+
+    @Override
+    public BigDecimal getCustomerBalanceAmountById(Long id) {
+        return balanceStrategy.getBalanceAmountById(id);
     }
 
     @Override
     public CustomerBalance topUp(Long id, BigDecimal amount) {
-        return null;
+        CustomerBalance customerBalance = findCustomerBalanceById(id);
+        BigDecimal currentAmount = customerBalance.getAmount();
+        if (amount.compareTo(currentAmount) > 0) {
+            throw new IllegalArgumentException();
+        }
+        BigDecimal newAmount = currentAmount.add(amount);
+        customerBalance.setAmount(newAmount);
+        return customerBalance;
     }
 
+    public CustomerBalance calculateAtCheckout(Long customerId, Long amount) {
+        return balanceStrategy.calculateAtCheckout(customerId, amount);
+    }
 }

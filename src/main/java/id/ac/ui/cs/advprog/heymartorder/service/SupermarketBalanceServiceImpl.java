@@ -1,40 +1,58 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
+import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
+import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.repository.SupermarketBalanceRepository;
+import id.ac.ui.cs.advprog.heymartorder.repository.SupermarketBalanceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Service
 public class SupermarketBalanceServiceImpl implements SupermarketBalanceService {
-    
-    SupermarketBalanceRepository supermarketBalanceRepository;
+    private final SupermarketBalanceRepository supermarketBalanceRepository;
+    private final BalanceStrategy<SupermarketBalance> balanceStrategy;
+
+    @Autowired
+    public SupermarketBalanceServiceImpl(SupermarketBalanceRepository supermarketBalanceRepository, BalanceStrategy<SupermarketBalance> balanceStrategy) {
+        this.supermarketBalanceRepository = supermarketBalanceRepository;
+        this.balanceStrategy = balanceStrategy;
+    }
     @Override
     public SupermarketBalance createSupermarketBalance(Long supermarketId) {
-        if (supermarketId == null) {
-            throw new IllegalArgumentException();
-        }
-        SupermarketBalance supermarketBalance = new SupermarketBalance();
-        supermarketBalance.setSupermarketId(supermarketId);
-        supermarketBalance.setAmount(BigDecimal.ZERO);
-
-        return supermarketBalanceRepository.save(supermarketBalance);
+        return balanceStrategy.createBalance(supermarketId);
     }
 
     @Override
-    public void deleteSupermarketBalance(Long id) {
-        SupermarketBalance supermarketBalance = findSupermarketBalanceById(id);
-        supermarketBalanceRepository.delete(supermarketBalance);
+    public SupermarketBalance deleteSupermarketBalance(Long id) {
+        return balanceStrategy.deleteBalance(id);
     }
 
     @Override
     public SupermarketBalance findSupermarketBalanceById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException();
-        }
-        return supermarketBalanceRepository.findById(id).orElseThrow();
+        return balanceStrategy.findBalanceById(id);
+    }
+
+    @Override
+    public BigDecimal getSupermarketBalanceAmountById(Long id) {
+        return balanceStrategy.getBalanceAmountById(id);
     }
     @Override
     public SupermarketBalance withDraw(Long id, BigDecimal amount) {
-        return null;
+        SupermarketBalance supermarketBalance = findSupermarketBalanceById(id);
+        BigDecimal currentAmount = supermarketBalance.getAmount();
+
+        if (amount.compareTo(currentAmount) > 0) {
+            throw new IllegalArgumentException();
+        }
+        BigDecimal newAmount = currentAmount.subtract(amount);
+        supermarketBalance.setAmount(newAmount);
+        return supermarketBalance;
+    }
+
+    public SupermarketBalance calculateAtCheckout(Long id, Long amount) {
+        return balanceStrategy.calculateAtCheckout(id, amount);
     }
 }
