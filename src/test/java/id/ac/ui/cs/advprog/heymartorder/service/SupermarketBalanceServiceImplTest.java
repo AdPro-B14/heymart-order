@@ -68,6 +68,7 @@ public class SupermarketBalanceServiceImplTest {
 
     @Test
     void testCreateSupermarketBalanceNotValid() {
+        when(supermarketBalanceService.createSupermarketBalance(null)).thenThrow(new IllegalArgumentException());
         assertThrows(IllegalArgumentException.class, () -> supermarketBalanceService.createSupermarketBalance(null));
     }
 

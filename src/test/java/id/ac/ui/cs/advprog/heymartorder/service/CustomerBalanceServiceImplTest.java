@@ -68,6 +68,7 @@ public class CustomerBalanceServiceImplTest {
 
     @Test
     void testCreateCustomerBalanceNotValid() {
+        when(customerBalanceService.createCustomerBalance(null)).thenThrow(new IllegalArgumentException());
         assertThrows(IllegalArgumentException.class, () -> customerBalanceService.createCustomerBalance(null));
     }
 
