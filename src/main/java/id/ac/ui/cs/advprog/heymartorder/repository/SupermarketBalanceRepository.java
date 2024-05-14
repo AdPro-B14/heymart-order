@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SupermarketBalanceRepository extends JpaRepository<SupermarketBalance, Long> {
-    Optional<SupermarketBalance> findById(Long id);
+    Optional<SupermarketBalance> findBySupermarketId(Long supermarketId);
 }

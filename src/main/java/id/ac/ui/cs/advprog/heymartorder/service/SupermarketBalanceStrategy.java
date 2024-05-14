@@ -42,7 +42,7 @@ public class SupermarketBalanceStrategy implements BalanceStrategy<SupermarketBa
         if (id == null) {
             throw new IllegalArgumentException();
         }
-        return supermarketBalanceRepository.findById(id).orElseThrow();
+        return supermarketBalanceRepository.findBySupermarketId(id).orElseThrow();
     }
     @Override
     public BigDecimal getBalanceAmountById(Long id) {

@@ -41,7 +41,7 @@ public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance>
         if (id == null) {
             throw new IllegalArgumentException();
         }
-        return customerBalanceRepository.findById(id).orElseThrow();
+        return customerBalanceRepository.findByCustomerId(id).orElseThrow();
     }
 
     @Override
