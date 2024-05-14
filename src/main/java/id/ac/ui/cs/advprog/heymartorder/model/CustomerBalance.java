@@ -2,22 +2,15 @@ package id.ac.ui.cs.advprog.heymartorder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.math.BigDecimal;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @Entity
 @Table(name = "customer_balance")
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CustomerBalance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-
+public class CustomerBalance extends Balance {
     Long customerId;
-
-    BigDecimal amount;
 }
