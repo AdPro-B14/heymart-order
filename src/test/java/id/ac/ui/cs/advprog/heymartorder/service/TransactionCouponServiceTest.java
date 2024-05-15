@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -54,13 +55,8 @@ public class TransactionCouponServiceTest {
     }
 
     @Test
-    void testCreateTransactionCouponIfAlreadyExists() {
-        TransactionCoupon tcCoupon = tcCoupons.getFirst();
-        doReturn(tcCoupon).when(transactionCouponRepository).findById(tcCoupon.getCouponId());
-
-        assertNull(transactionCouponService.createTransactionCoupon(tcCoupon));
-        verify(transactionCouponRepository, times(0)).save(tcCoupon);
-
+    void testCreateTransactionCouponNotValid() {
+        assertThrows(IllegalArgumentException.class, () -> transactionCouponService.createTransactionCoupon(null));
     }
 
     @Test
@@ -83,7 +79,7 @@ public class TransactionCouponServiceTest {
 
     @Test
     void testUpdateIsUsedInvalidCouponId() {
-        doReturn(null).when(transactionCouponRepository).findById("foobar");
+        doReturn(null).when(transactionCouponRepository).findTransactionCouponByCouponId("foobar");
 
         assertThrows(NoSuchElementException.class,
                 () -> transactionCouponService.updateIsUsed("foobar", true));
@@ -94,7 +90,7 @@ public class TransactionCouponServiceTest {
     @Test
     void testFindIdIfIdFound() {
         TransactionCoupon tcCoupon = tcCoupons.getFirst();
-        doReturn(tcCoupon).when(transactionCouponRepository).findById(tcCoupon.getCouponId());
+        doReturn(tcCoupon).when(transactionCouponRepository).findTransactionCouponByCouponId(tcCoupon.getCouponId());
 
         TransactionCoupon result = transactionCouponService.findById(tcCoupon.getCouponId());
         assertEquals(tcCoupon.getCouponId(), result.getCouponId());
