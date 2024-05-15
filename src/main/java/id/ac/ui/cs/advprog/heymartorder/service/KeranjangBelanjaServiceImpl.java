@@ -16,6 +16,7 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
         return new KeranjangBelanjaBuilder()
+            .setId(userId)
             .setSupermarketId(null)
             .setProductMap(new HashMap<String, Integer>())
             .build();

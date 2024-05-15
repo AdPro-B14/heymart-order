@@ -31,6 +31,7 @@ public class KeranjangBelanjaServiceTest {
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
         KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setId(1L)
                 .setSupermarketId(1L)
                 .setProductMap(productMap)
                 .build();

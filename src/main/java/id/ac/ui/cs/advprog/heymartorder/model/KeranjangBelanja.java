@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Getter
 public class KeranjangBelanja {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter
     private Long id;
 
     @Setter

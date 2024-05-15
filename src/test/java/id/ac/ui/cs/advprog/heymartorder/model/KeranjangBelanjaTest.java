@@ -18,6 +18,7 @@ public class KeranjangBelanjaTest {
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
         keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setId(1L)
                 .setSupermarketId(1L)
                 .setProductMap(productMap)
                 .build();
@@ -29,6 +30,7 @@ public class KeranjangBelanjaTest {
         productMap.put("produk-1", 5);
         productMap.put("produk-2", 3);
         KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+                .setId(1L)
                 .setSupermarketId(1L)
                 .setProductMap(productMap)
                 .build();
@@ -45,6 +47,7 @@ public class KeranjangBelanjaTest {
 
         assertThrows(IllegalArgumentException.class, () -> {
             new KeranjangBelanjaBuilder()
+                    .setId(1L)
                     .setSupermarketId(null) // Setting null supermarketId
                     .setProductMap(productMap)
                     .build();
