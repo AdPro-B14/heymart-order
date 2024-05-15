@@ -1,19 +1,17 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @MappedSuperclass
+@Entity
 public abstract class Coupon {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     String couponId;
 
     String couponName;
@@ -28,8 +26,8 @@ public abstract class Coupon {
         this.couponNominal = couponNominal;
     }
 
-    Coupon() {
-        // Default constructor
+    public Coupon() {
+
     }
 
     public abstract void prepare();

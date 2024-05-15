@@ -6,5 +6,4 @@ public class AddTransactionCouponRequest {
     public long couponNominal;
     public long minimumBuy;
     public boolean isUsed;
-    public String productId;
 }
