@@ -67,7 +67,7 @@ public class TransactionCouponServiceTest {
         TransactionCoupon newTcCoupon = transactionCouponFactory
                 .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
                         10000L, false, 50000L);
-        doReturn(tcCoupon).when(transactionCouponRepository).findById(tcCoupon.getCouponId());
+        doReturn(tcCoupon).when(transactionCouponRepository).findTransactionCouponByCouponId(tcCoupon.getCouponId());
         doReturn(newTcCoupon).when(transactionCouponRepository).save(any(TransactionCoupon.class));
 
         TransactionCoupon result = transactionCouponService.updateIsUsed(tcCoupon.getCouponId(), true);
@@ -98,8 +98,8 @@ public class TransactionCouponServiceTest {
 
     @Test
     void testFindIdIfIdNotFound() {
-        doReturn(null).when(transactionCouponRepository).findById("zczc");
-        assertNull(transactionCouponRepository.findById("zczc"));
+        doReturn(null).when(transactionCouponRepository).findTransactionCouponByCouponId("zczc");
+        assertNull(transactionCouponRepository.findTransactionCouponByCouponId("zczc"));
     }
 
     @Test

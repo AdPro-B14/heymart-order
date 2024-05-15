@@ -16,12 +16,14 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     TransactionCouponRepository transactionCouponRepository;
     @Override
     public TransactionCoupon createTransactionCoupon(TransactionCoupon tcCoupon) {
-        if (transactionCouponRepository.findById(tcCoupon.getCouponId()).isEmpty()) {
+        if (tcCoupon == null) {
+            throw new IllegalArgumentException();
+        } else {
             transactionCouponRepository.save(tcCoupon);
             return tcCoupon;
         }
-        return null;
     }
+
     @Override
     public TransactionCoupon updateIsUsed(String couponId, boolean isUsed) {
         TransactionCoupon tcCoupon = transactionCouponRepository.findTransactionCouponByCouponId(couponId);
@@ -42,4 +44,5 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     public List<TransactionCoupon> findAll() {
         return transactionCouponRepository.findAll();
     }
+
 }
