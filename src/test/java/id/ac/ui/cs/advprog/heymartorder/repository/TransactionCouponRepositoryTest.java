@@ -17,7 +17,7 @@ public class TransactionCouponRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        transactionCouponRepository =  new TransactionCouponRepository();
+//        transactionCouponRepository =  new TransactionCouponRepository();
         this.tcCoupons = new ArrayList<>();
 
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
@@ -40,7 +40,7 @@ public class TransactionCouponRepositoryTest {
         TransactionCoupon tcCoupon = tcCoupons.getFirst();
         TransactionCoupon result = transactionCouponRepository.save(tcCoupon);
 
-        TransactionCoupon findResult = transactionCouponRepository.findById(tcCoupons.getFirst().getCouponId());
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById(tcCoupons.getFirst().getCouponId());
         assertEquals(tcCoupon.getCouponId(), result.getCouponId());
         assertEquals(tcCoupon.getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupon.getCouponName(), findResult.getCouponName());
@@ -51,11 +51,9 @@ public class TransactionCouponRepositoryTest {
 
     @Test
     void testFindIdIfIdFound() {
-        for (TransactionCoupon tcCoupon : tcCoupons) {
-            transactionCouponRepository.save(tcCoupon);
-        }
+        transactionCouponRepository.saveAll(tcCoupons);
 
-        TransactionCoupon findResult = transactionCouponRepository.findById(tcCoupons.getFirst().getCouponId());
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById(tcCoupons.getFirst().getCouponId());
         assertEquals(tcCoupons.getFirst().getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupons.getFirst().getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupons.getFirst().getCouponNominal(), findResult.getCouponNominal());
@@ -65,11 +63,9 @@ public class TransactionCouponRepositoryTest {
 
     @Test
     void testFindIdIfIdNotFound() {
-        for (TransactionCoupon tcCoupon : tcCoupons) {
-            transactionCouponRepository.save(tcCoupon);
-        }
+        transactionCouponRepository.saveAll(tcCoupons);
 
-        TransactionCoupon findResult = transactionCouponRepository.findById("zczc");
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById("zczc");
         assertNull(findResult);
     }
 
