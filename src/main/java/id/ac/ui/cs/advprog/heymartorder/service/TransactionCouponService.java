@@ -9,5 +9,6 @@ public interface TransactionCouponService {
     public TransactionCoupon updateIsUsed(String couponId, boolean isUsed);
     public TransactionCoupon findById(String couponId);
     public List<TransactionCoupon> findAll();
+    public void delete(String id);
 
 }

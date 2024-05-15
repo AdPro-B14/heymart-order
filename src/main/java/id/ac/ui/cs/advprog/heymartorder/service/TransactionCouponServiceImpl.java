@@ -45,4 +45,13 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
         return transactionCouponRepository.findAll();
     }
 
+    @Override
+    public void delete(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException();
+        } else {
+            TransactionCoupon tcCoupon = findById(id);
+            transactionCouponRepository.delete(tcCoupon);
+        }
+    }
 }

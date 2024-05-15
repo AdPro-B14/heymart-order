@@ -113,4 +113,17 @@ public class TransactionCouponServiceTest {
         }
         assertEquals(2, results.size());
     }
+
+    @Test
+    void deleteTransactionCouponValid() {
+        when(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.getFirst().getCouponId()))
+                .thenReturn(tcCoupons.getFirst());
+
+        transactionCouponService.delete(tcCoupons.getFirst().getCouponId());
+    }
+
+    @Test
+    void deleteTransactionCouponInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> transactionCouponService.delete(null));
+    }
 }
