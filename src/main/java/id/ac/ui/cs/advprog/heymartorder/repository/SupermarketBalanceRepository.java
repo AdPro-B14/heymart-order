@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SupermarketBalanceRepository extends JpaRepository<SupermarketBalance, Long> {
     Optional<SupermarketBalance> findBySupermarketId(Long supermarketId);
+    Boolean existsBySupermarketId(Long supermarketId);
 }

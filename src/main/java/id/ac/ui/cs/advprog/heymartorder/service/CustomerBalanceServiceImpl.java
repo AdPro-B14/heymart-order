@@ -38,6 +38,11 @@ public class CustomerBalanceServiceImpl implements CustomerBalanceService {
     }
 
     @Override
+    public boolean existsCustomerBalanceById(Long id) {
+        return balanceStrategy.existsById(id);
+    }
+
+    @Override
     public CustomerBalance topUp(Long id, BigDecimal amount) {
         CustomerBalance customerBalance = findCustomerBalanceById(id);
         BigDecimal currentAmount = customerBalance.getAmount();

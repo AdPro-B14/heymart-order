@@ -45,6 +45,11 @@ public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance>
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return customerBalanceRepository.existsById(id);
+    }
+
+    @Override
     public BigDecimal getBalanceAmountById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException();

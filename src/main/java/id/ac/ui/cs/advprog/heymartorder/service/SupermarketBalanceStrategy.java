@@ -45,6 +45,10 @@ public class SupermarketBalanceStrategy implements BalanceStrategy<SupermarketBa
         return supermarketBalanceRepository.findBySupermarketId(id).orElseThrow();
     }
     @Override
+    public boolean existsById(Long id) {
+        return supermarketBalanceRepository.existsById(id);
+    }
+    @Override
     public BigDecimal getBalanceAmountById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException();

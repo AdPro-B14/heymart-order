@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CustomerBalanceRepository extends JpaRepository<CustomerBalance, Long> {
     Optional<CustomerBalance> findByCustomerId(Long customerId);
+    Boolean existsByCustomerId(Long customerId);
 }

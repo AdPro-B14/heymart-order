@@ -11,6 +11,8 @@ public interface CustomerBalanceService {
 
     CustomerBalance findCustomerBalanceById(Long id);
 
+    boolean existsCustomerBalanceById(Long id);
+
     BigDecimal getCustomerBalanceAmountById(Long id);
 
     CustomerBalance topUp(Long id, BigDecimal amount);

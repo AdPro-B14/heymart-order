@@ -40,6 +40,10 @@ public class SupermarketBalanceServiceImpl implements SupermarketBalanceService 
         return balanceStrategy.getBalanceAmountById(id);
     }
     @Override
+    public boolean existsSupermarketBalanceById(Long id) {
+        return balanceStrategy.existsById(id);
+    }
+    @Override
     public SupermarketBalance withDraw(Long id, BigDecimal amount) {
         SupermarketBalance supermarketBalance = findSupermarketBalanceById(id);
         BigDecimal currentAmount = supermarketBalance.getAmount();
