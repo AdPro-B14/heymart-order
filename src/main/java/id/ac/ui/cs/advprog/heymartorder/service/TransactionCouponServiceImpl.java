@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class TransactionCouponServiceImpl implements TransactionCouponService {
@@ -15,7 +16,7 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     TransactionCouponRepository transactionCouponRepository;
     @Override
     public TransactionCoupon createTransactionCoupon(TransactionCoupon tcCoupon) {
-        if (transactionCouponRepository.findById(tcCoupon.getCouponId()) == null) {
+        if (transactionCouponRepository.findById(tcCoupon.getCouponId()).isEmpty()) {
             transactionCouponRepository.save(tcCoupon);
             return tcCoupon;
         }
@@ -23,7 +24,7 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     }
     @Override
     public TransactionCoupon updateIsUsed(String couponId, boolean isUsed) {
-        TransactionCoupon tcCoupon = transactionCouponRepository.findById(couponId);
+        TransactionCoupon tcCoupon = transactionCouponRepository.findTransactionCouponByCouponId(couponId);
         if (tcCoupon != null) {
             tcCoupon.setUsed(isUsed); // Update the existing coupon
             transactionCouponRepository.save(tcCoupon); // Save the updated coupon
@@ -34,7 +35,7 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     }
     @Override
     public TransactionCoupon findById(String couponId) {
-        return transactionCouponRepository.findById(couponId);
+        return transactionCouponRepository.findTransactionCouponByCouponId(couponId);
     }
 
     @Override

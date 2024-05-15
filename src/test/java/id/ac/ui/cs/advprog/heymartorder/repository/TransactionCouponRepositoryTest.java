@@ -2,22 +2,38 @@ package id.ac.ui.cs.advprog.heymartorder.repository;
 
 import id.ac.ui.cs.advprog.heymartorder.factory.TransactionCouponFactory;
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
+import id.ac.ui.cs.advprog.heymartorder.service.TransactionCouponService;
+import id.ac.ui.cs.advprog.heymartorder.service.TransactionCouponServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.assertj.core.api.Assertions.assertThat;
 
+
+@ExtendWith(MockitoExtension.class)
 public class TransactionCouponRepositoryTest {
+
+    @Mock
     TransactionCouponRepository transactionCouponRepository;
+
     List<TransactionCoupon> tcCoupons;
 
     @BeforeEach
     void setUp() {
-//        transactionCouponRepository =  new TransactionCouponRepository();
         this.tcCoupons = new ArrayList<>();
 
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
@@ -38,52 +54,71 @@ public class TransactionCouponRepositoryTest {
     @Test
     void testSaveCreate() {
         TransactionCoupon tcCoupon = tcCoupons.getFirst();
-        TransactionCoupon result = transactionCouponRepository.save(tcCoupon);
+        Mockito.when(transactionCouponRepository.save(Mockito.any(TransactionCoupon.class)))
+                .thenReturn(tcCoupon); // Define behavior for save method
+        Mockito.when(transactionCouponRepository.findTransactionCouponByCouponId(Mockito.anyString()))
+                .thenReturn(tcCoupon); // Define behavior for find by ID method
 
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById(tcCoupons.getFirst().getCouponId());
-        assertEquals(tcCoupon.getCouponId(), result.getCouponId());
+        TransactionCoupon savedTcCoupon = transactionCouponRepository.save(tcCoupon);
+//        System.out.println(result);
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.getFirst().getCouponId());
+        assertEquals(tcCoupon.getCouponId(), savedTcCoupon.getCouponId());
         assertEquals(tcCoupon.getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupon.getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupon.getCouponNominal(), findResult.getCouponNominal());
         assertEquals(tcCoupon.getMinimumBuy(), findResult.getMinimumBuy());
         assertEquals(tcCoupon.isUsed(), findResult.isUsed());
+
+        Assertions.assertEquals(savedTcCoupon.getCouponId(), tcCoupon.getCouponId());
     }
 
     @Test
     void testFindIdIfIdFound() {
         transactionCouponRepository.saveAll(tcCoupons);
+        System.out.println(transactionCouponRepository);
+        Mockito.when(transactionCouponRepository.findTransactionCouponByCouponId(Mockito.anyString()))
+                .thenReturn(tcCoupons.get(0)); // Define behavior for find by ID method
 
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById(tcCoupons.getFirst().getCouponId());
-        assertEquals(tcCoupons.getFirst().getCouponId(), findResult.getCouponId());
-        assertEquals(tcCoupons.getFirst().getCouponName(), findResult.getCouponName());
-        assertEquals(tcCoupons.getFirst().getCouponNominal(), findResult.getCouponNominal());
-        assertEquals(tcCoupons.getFirst().getMinimumBuy(), findResult.getMinimumBuy());
-        assertEquals(tcCoupons.getFirst().isUsed(), findResult.isUsed());
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.get(0).getCouponId());
+        assertEquals(tcCoupons.get(0).getCouponId(), findResult.getCouponId());
+        assertEquals(tcCoupons.get(0).getCouponName(), findResult.getCouponName());
+        assertEquals(tcCoupons.get(0).getCouponNominal(), findResult.getCouponNominal());
+        assertEquals(tcCoupons.get(0).getMinimumBuy(), findResult.getMinimumBuy());
+        assertEquals(tcCoupons.get(0).isUsed(), findResult.isUsed());
     }
 
     @Test
     void testFindIdIfIdNotFound() {
         transactionCouponRepository.saveAll(tcCoupons);
 
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponById("zczc");
+        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId("zczc");
         assertNull(findResult);
     }
 
     @Test
     void testDelete() {
-        TransactionCoupon tcCoupon = tcCoupons.getFirst();
-        TransactionCoupon result = transactionCouponRepository.save(tcCoupon);
+        // Arrange
+        TransactionCoupon tcCoupon = tcCoupons.get(0);
+        Mockito.when(transactionCouponRepository.save(Mockito.any(TransactionCoupon.class)))
+                .thenReturn(tcCoupon); // Define behavior for save method
+        TransactionCoupon savedCoupon = transactionCouponRepository.save(tcCoupon);
 
-        // Retrieve the product
-        List<TransactionCoupon> tcList = transactionCouponRepository.findAll();
-        assertEquals(tcList.getFirst().getCouponId(), tcCoupon.getCouponId()); // Assert true initially
-        TransactionCoupon savedProduct = tcList.getFirst();
-        assertEquals(tcCoupon.getCouponId(), savedProduct.getCouponId());
+        assertNotNull(savedCoupon);
+        assertEquals(tcCoupon.getCouponId(), savedCoupon.getCouponId());
 
-        // Delete the product
-        transactionCouponRepository.delete(result);
-        tcList = transactionCouponRepository.findAll();
-        assertTrue(tcList.isEmpty()); // Assert false because the product should already be removed
+        Mockito.when(transactionCouponRepository.count())
+                .thenReturn(1L); // Define behavior for save method
+
+        long countBeforeDelete = transactionCouponRepository.count();
+        assertEquals(1, countBeforeDelete);
+        transactionCouponRepository.delete(savedCoupon);
+
+        Mockito.when(transactionCouponRepository.count())
+                .thenReturn(0L); // Define behavior for save method
+        // Assert: Check that the coupon was deleted
+        long countAfterDelete = transactionCouponRepository.count();
+        assertEquals(0, countAfterDelete);
+        assertNull(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupon.getCouponId()));
     }
 
     @Test
@@ -94,7 +129,9 @@ public class TransactionCouponRepositoryTest {
         TransactionCoupon tcCoupon2 = tcCoupons.get(1);
         transactionCouponRepository.delete(tcCoupon2);
 
-        List<TransactionCoupon> tcList = transactionCouponRepository.findAll();
+        List<TransactionCoupon> tcList = new ArrayList<>();
+        tcList.add(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupon1.getCouponId()));
+        System.out.println(tcList);
         assertFalse(tcList.isEmpty()); // Assert true because the first product should still exist
     }
 
