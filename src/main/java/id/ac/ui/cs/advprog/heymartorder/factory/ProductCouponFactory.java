@@ -5,13 +5,13 @@ import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 
 public class ProductCouponFactory {
 
-    public ProductCoupon orderCoupon(String couponId, Long supermarketId, String productId, String couponName, Long couponNominal) {
-        ProductCoupon coupon = createCoupon(couponId, supermarketId, productId, couponName, couponNominal);
+    public ProductCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
+        ProductCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, productId);
         coupon.prepare();
         return coupon;
     }
-    public ProductCoupon createCoupon(String couponId, Long supermarketId, String productId, String couponName, Long couponNominal) {
-        return new ProductCoupon(couponId, supermarketId, productId, couponName, couponNominal);
+    public ProductCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
+        return new ProductCoupon(supermarketId, couponName, couponNominal, productId);
     }
 
 }

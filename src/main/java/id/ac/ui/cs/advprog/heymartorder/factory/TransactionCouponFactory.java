@@ -2,14 +2,16 @@ package id.ac.ui.cs.advprog.heymartorder.factory;
 
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 
+import java.util.List;
+
 public class TransactionCouponFactory {
 
-    public TransactionCoupon orderCoupon(String couponId, Long supermarketId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        TransactionCoupon coupon = createCoupon(couponId, supermarketId, couponName, couponNominal, isUsed, minimumBuy);
+    public TransactionCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        TransactionCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, minimumBuy);
         coupon.prepare();
         return coupon;
     }
-    public TransactionCoupon createCoupon(String couponId, Long supermarketId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        return new TransactionCoupon(couponId, supermarketId, couponName, couponNominal, isUsed, minimumBuy);
+    public TransactionCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        return new TransactionCoupon(supermarketId, couponName, couponNominal, minimumBuy);
     }
 }
