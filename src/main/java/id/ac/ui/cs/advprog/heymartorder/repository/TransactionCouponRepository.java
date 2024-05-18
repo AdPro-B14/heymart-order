@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransactionCouponRepository extends JpaRepository<TransactionCoupon, String> {
-    TransactionCoupon findTransactionCouponByCouponId(String id);
+    TransactionCoupon findByCouponId(String id);
 }

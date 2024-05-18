@@ -35,12 +35,15 @@ public class TransactionCouponController {
         this.webClient = webClient;
     }
 
+    // supermarketId /{id}
     @GetMapping("/all-transaction-coupon")
     public ResponseEntity<List<TransactionCoupon>> allTransactionCoupon() {
         List<TransactionCoupon> allTransactionCoupon = transactionCouponService.findAll();
         return ResponseEntity.ok(allTransactionCoupon);
     }
 
+
+    // supermarketId
     @PostMapping("/create-transaction-coupon")
     public ResponseEntity<TransactionCoupon> addTransactionCoupon(@RequestHeader(value = "Authorization") String id,
                                                                   @RequestBody AddTransactionCouponRequest request) throws IllegalAccessException {
@@ -52,7 +55,7 @@ public class TransactionCouponController {
 
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
         TransactionCoupon tcCoupon = transactionCouponFactory
-                .orderCoupon(request.couponId, request.couponName, request.couponNominal, request.isUsed, request.minimumBuy);
+                .orderCoupon(request.couponId, request.supermarketId, request.couponName, request.couponNominal, request.isUsed, request.minimumBuy);
 
         return ResponseEntity.ok(transactionCouponService.createTransactionCoupon(tcCoupon));
     }
@@ -68,4 +71,6 @@ public class TransactionCouponController {
 
         transactionCouponService.delete(couponId);
         return ResponseEntity.ok(SuccessResponse.builder().success(true).build());    }
+
+    //getProduct
 }

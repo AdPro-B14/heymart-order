@@ -26,7 +26,7 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
 
     @Override
     public TransactionCoupon updateIsUsed(String couponId, boolean isUsed) {
-        TransactionCoupon tcCoupon = transactionCouponRepository.findTransactionCouponByCouponId(couponId);
+        TransactionCoupon tcCoupon = transactionCouponRepository.findByCouponId(couponId);
         if (tcCoupon != null) {
             tcCoupon.setUsed(isUsed); // Update the existing coupon
             transactionCouponRepository.save(tcCoupon); // Save the updated coupon
@@ -37,7 +37,7 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
     }
     @Override
     public TransactionCoupon findById(String couponId) {
-        return transactionCouponRepository.findTransactionCouponByCouponId(couponId);
+        return transactionCouponRepository.findByCouponId(couponId);
     }
 
     @Override

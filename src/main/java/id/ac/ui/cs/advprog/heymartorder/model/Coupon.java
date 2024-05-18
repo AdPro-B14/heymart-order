@@ -14,14 +14,18 @@ public abstract class Coupon {
     @GeneratedValue(strategy = GenerationType.UUID)
     String couponId;
 
+    Long supermarketId;
+
     String couponName;
     long couponNominal;
     long minimumBuy;
     boolean isUsed;
     String productId;
 
-    Coupon(String couponId, String couponName, long couponNominal) {
+    // supermarketId
+    Coupon(String couponId, Long supermarketId, String couponName, long couponNominal) {
         this.couponId = couponId;
+        this.supermarketId = supermarketId;
         this.couponName = couponName;
         this.couponNominal = couponNominal;
     }

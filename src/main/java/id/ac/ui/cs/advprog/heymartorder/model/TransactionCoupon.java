@@ -13,8 +13,8 @@ import lombok.Setter;
 @Entity
 public class TransactionCoupon extends Coupon {
 
-    public TransactionCoupon(String couponId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        super(couponId, couponName, couponNominal);
+    public TransactionCoupon(String couponId, Long supermarketId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
+        super(couponId, supermarketId, couponName, couponNominal);
         this.isUsed = isUsed;
         this.minimumBuy = minimumBuy;
     }
