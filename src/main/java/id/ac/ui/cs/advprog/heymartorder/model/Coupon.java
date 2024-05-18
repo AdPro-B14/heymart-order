@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-@Entity
 public abstract class Coupon {
 
     @Id
@@ -18,13 +17,10 @@ public abstract class Coupon {
 
     String couponName;
     long couponNominal;
-    long minimumBuy;
-    boolean isUsed;
-    String productId;
+
 
     // supermarketId
-    Coupon(String couponId, Long supermarketId, String couponName, long couponNominal) {
-        this.couponId = couponId;
+    Coupon(Long supermarketId, String couponName, long couponNominal) {
         this.supermarketId = supermarketId;
         this.couponName = couponName;
         this.couponNominal = couponNominal;

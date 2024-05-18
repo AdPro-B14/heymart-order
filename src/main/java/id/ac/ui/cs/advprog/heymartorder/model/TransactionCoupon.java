@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Table(name = "transaction_coupon")
 @Getter
@@ -13,9 +16,11 @@ import lombok.Setter;
 @Entity
 public class TransactionCoupon extends Coupon {
 
-    public TransactionCoupon(String couponId, Long supermarketId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        super(couponId, supermarketId, couponName, couponNominal);
-        this.isUsed = isUsed;
+    long minimumBuy;
+    List<Long> consumers = new ArrayList<>();
+
+    public TransactionCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        super(supermarketId, couponName, couponNominal);
         this.minimumBuy = minimumBuy;
     }
 
