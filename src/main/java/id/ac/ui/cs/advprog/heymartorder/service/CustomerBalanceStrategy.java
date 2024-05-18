@@ -12,7 +12,7 @@ public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance>
     private final CustomerBalanceRepository customerBalanceRepository;
 
     @Autowired
-    public CustomerBalanceStrategy(CustomerBalanceRepository customerBalanceRepository, CustomerBalanceServiceImpl customerBalanceService) {
+    public CustomerBalanceStrategy(CustomerBalanceRepository customerBalanceRepository) {
         this.customerBalanceRepository = customerBalanceRepository;
     }
     @Override

@@ -2,7 +2,6 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.repository.SupermarketBalanceRepository;
-import id.ac.ui.cs.advprog.heymartorder.repository.SupermarketBalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +10,10 @@ import java.math.BigDecimal;
 @Component
 public class SupermarketBalanceStrategy implements BalanceStrategy<SupermarketBalance> {
     private final SupermarketBalanceRepository supermarketBalanceRepository;
-    private final SupermarketBalanceServiceImpl supermarketBalanceService;
 
     @Autowired
-    public SupermarketBalanceStrategy(SupermarketBalanceRepository supermarketBalanceRepository, SupermarketBalanceServiceImpl supermarketBalanceService) {
+    public SupermarketBalanceStrategy(SupermarketBalanceRepository supermarketBalanceRepository) {
         this.supermarketBalanceRepository = supermarketBalanceRepository;
-        this.supermarketBalanceService = supermarketBalanceService;
     }
     @Override
     public SupermarketBalance createBalance(Long supermarketId) {
@@ -62,8 +59,8 @@ public class SupermarketBalanceStrategy implements BalanceStrategy<SupermarketBa
         if (supermarketId == null) {
             throw new IllegalArgumentException();
         }
-        SupermarketBalance supermarketBalance = supermarketBalanceService.
-                findSupermarketBalanceById(supermarketId);
+        SupermarketBalance supermarketBalance = supermarketBalanceRepository.
+                findBySupermarketId(supermarketId).orElseThrow();
         BigDecimal currentAmount = supermarketBalance.getAmount();
         BigDecimal checkoutAmount = BigDecimal.valueOf(amount);
         BigDecimal updatedAmount = currentAmount.add(checkoutAmount);
