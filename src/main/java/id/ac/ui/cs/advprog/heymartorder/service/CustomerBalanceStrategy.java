@@ -10,12 +10,10 @@ import java.math.BigDecimal;
 @Component
 public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance> {
     private final CustomerBalanceRepository customerBalanceRepository;
-    private final CustomerBalanceServiceImpl customerBalanceService;
 
     @Autowired
     public CustomerBalanceStrategy(CustomerBalanceRepository customerBalanceRepository, CustomerBalanceServiceImpl customerBalanceService) {
         this.customerBalanceRepository = customerBalanceRepository;
-        this.customerBalanceService = customerBalanceService;
     }
     @Override
     public CustomerBalance createBalance(Long customerId) {
@@ -63,8 +61,8 @@ public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance>
         if (customerId == null) {
             throw new IllegalArgumentException();
         }
-        CustomerBalance customerBalance = customerBalanceService.
-                findCustomerBalanceById(customerId);
+        CustomerBalance customerBalance = customerBalanceRepository.
+                findById(customerId).orElseThrow();
         BigDecimal currentAmount = customerBalance.getAmount();
         BigDecimal checkoutAmount = BigDecimal.valueOf(amount);
         if (checkoutAmount.compareTo(currentAmount) > 0) {
