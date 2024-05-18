@@ -8,6 +8,8 @@ import java.util.List;
 public interface ProductCouponService {
     public ProductCoupon createProductCoupon(ProductCoupon tcCoupon);
     public ProductCoupon findById(String couponId);
+    public List<ProductCoupon> findBySupermarketId(Long supermarketId);
+    public List<ProductCoupon> findByProductId(String productId);
     public List<ProductCoupon> findAll();
     public void delete(String id);
 }

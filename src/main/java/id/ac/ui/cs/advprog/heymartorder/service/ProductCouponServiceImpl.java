@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.model.ProductCoupon;
+import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 import id.ac.ui.cs.advprog.heymartorder.repository.ProductCouponRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class ProductCouponServiceImpl implements ProductCouponService {
     @Override
     public ProductCoupon findById(String couponId) {
         return productCouponRepository.findByCouponId(couponId);
+    }
+
+    @Override
+    public List<ProductCoupon> findBySupermarketId(Long supermarketId) {
+        return productCouponRepository.findBySupermarketId(supermarketId);
+    }
+
+    @Override
+    public List<ProductCoupon> findByProductId(String productId) {
+        return productCouponRepository.findByProductId(productId);
     }
 
     @Override
