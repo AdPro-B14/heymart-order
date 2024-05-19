@@ -159,4 +159,31 @@ class KeranjangBelanjaServiceImplTest {
         verify(keranjangBelanjaRepository, times(1)).findKeranjangBelanjaById(userId);
     }
 
+    @Test
+    void testRemoveProductFromKeranjang() {
+        Long userId = 1L;
+        String productId = "product1";
+
+        HashMap<String, Integer> productMap = new HashMap<>();
+        productMap.put(productId, 2);
+        KeranjangBelanja existingKeranjangBelanja = new KeranjangBelanjaBuilder()
+                .setId(userId)
+                .setSupermarketId(2L)
+                .setProductMap(productMap)
+                .build();
+
+        when(keranjangBelanjaRepository.findKeranjangBelanjaById(userId)).thenReturn(Optional.of(existingKeranjangBelanja));
+        when(keranjangBelanjaRepository.save(any(KeranjangBelanja.class))).thenReturn(existingKeranjangBelanja);
+
+        KeranjangBelanja result = keranjangBelanjaService.removeProductFromKeranjang(userId, productId);
+
+        assertNotNull(result);
+        assertTrue(result.getProductMap().containsKey(productId));
+        assertEquals(1, result.getProductMap().get(productId));
+
+        verify(keranjangBelanjaRepository, times(1)).findKeranjangBelanjaById(userId);
+        verify(keranjangBelanjaRepository, times(1)).save(any(KeranjangBelanja.class));
+    }
+
+
 }
