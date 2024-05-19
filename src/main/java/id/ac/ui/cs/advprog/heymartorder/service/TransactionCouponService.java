@@ -12,5 +12,4 @@ public interface TransactionCouponService {
     public List<TransactionCoupon> findAll();
     public void delete(String id);
     public List<Long> getConsumers(String couponId);
-    public boolean validateConsumer(String couponId, Long consumer);
 }

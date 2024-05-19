@@ -67,12 +67,4 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
         return tcCoupon.getConsumers();
     }
 
-    @Override
-    public boolean validateConsumer(String couponId, Long consumer) {
-        TransactionCoupon tcCoupon =  transactionCouponRepository.findByCouponId(couponId);
-        if (tcCoupon.getConsumers().contains(consumer)) {
-            return false;
-        }
-        return true;
-    }
 }
