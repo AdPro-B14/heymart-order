@@ -86,7 +86,7 @@ public class TransactionCouponServiceTest {
         }
         assertEquals(2, results.size());
     }
-    
+
     @Test
     void deleteTransactionCouponInvalid() {
         assertThrows(IllegalArgumentException.class, () -> transactionCouponService.delete(null));
