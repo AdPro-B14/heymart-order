@@ -6,7 +6,7 @@ public class KeranjangBelanjaBuilder {
 
     private Long id;
     private Long supermarketId;
-    private HashMap<String, Integer> productMap;
+
 
     public KeranjangBelanjaBuilder setId(Long id) {
         this.id = id;
@@ -14,14 +14,7 @@ public class KeranjangBelanjaBuilder {
     }
 
     public KeranjangBelanjaBuilder setSupermarketId(Long supermarketId) {
-//        if (supermarketId == null)
-//            throw new IllegalArgumentException();
         this.supermarketId = supermarketId;
-        return this;
-    }
-
-    public KeranjangBelanjaBuilder setProductMap(HashMap<String, Integer> productMap) {
-        this.productMap = productMap;
         return this;
     }
 
@@ -29,7 +22,6 @@ public class KeranjangBelanjaBuilder {
         KeranjangBelanja keranjangBelanja = new KeranjangBelanja();
         keranjangBelanja.setId(this.id);
         keranjangBelanja.setSupermarketId(this.supermarketId);
-        keranjangBelanja.setProductMap(this.productMap);
         return keranjangBelanja;
     }
 
