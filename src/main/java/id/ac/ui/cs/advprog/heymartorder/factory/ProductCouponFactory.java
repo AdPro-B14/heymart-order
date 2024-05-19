@@ -11,6 +11,9 @@ public class ProductCouponFactory {
         return coupon;
     }
     public ProductCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
+        if (couponNominal <= 0) {
+            throw new IllegalArgumentException("Coupon nominal must be greater than 0");
+        }
         return new ProductCoupon(supermarketId, couponName, couponNominal, productId);
     }
 

@@ -12,6 +12,15 @@ public class TransactionCouponFactory {
         return coupon;
     }
     public TransactionCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        if (couponNominal <= 0) {
+            throw new IllegalArgumentException("Coupon nominal must be greater than 0");
+        }
+        if (minimumBuy <= 0) {
+            throw new IllegalArgumentException("Minimum buy must be greater than 0");
+        }
+        if (minimumBuy <= couponNominal) {
+            throw new IllegalArgumentException("minimumBuy must be greater than couponNominal");
+        }
         return new TransactionCoupon(supermarketId, couponName, couponNominal, minimumBuy);
     }
 }
