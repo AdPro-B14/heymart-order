@@ -10,6 +10,4 @@ public class AddTransactionCouponRequest {
     public String couponName;
     public long couponNominal;
     public long minimumBuy;
-//    public boolean isUsed;
-    public List<Long> consumers;
 }
