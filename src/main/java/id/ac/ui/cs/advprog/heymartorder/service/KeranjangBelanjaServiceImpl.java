@@ -59,6 +59,24 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     }
 
     @Override
+    public KeranjangBelanja removeProductFromKeranjang(Long userId, String productId) {
+        KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
+        HashMap<String, Integer> productMap = keranjangBelanja.getProductMap();
+        if (productMap.containsKey(productId)) {
+            int quantity = productMap.get(productId);
+            if (quantity > 1) {
+                productMap.put(productId, quantity - 1);
+            } else {
+                productMap.remove(productId);
+            }
+        } else {
+            throw new IllegalArgumentException();
+        }
+        return keranjangBelanjaRepository.save(keranjangBelanja);
+    }
+
+
+    @Override
     public Integer countTotal(HashMap<String, Integer> productMap) {
         // todo perlu harga dari produk
 //        Long total = 0;
