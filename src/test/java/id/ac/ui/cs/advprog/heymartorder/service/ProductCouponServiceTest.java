@@ -32,12 +32,12 @@ public class ProductCouponServiceTest {
         ProductCouponFactory productCouponFactory = new ProductCouponFactory();
 
         ProductCoupon productCoupon1 = productCouponFactory
-                .orderCoupon(1L, "Kupon 4.4.24",
-                        10000L, 50000L);
+                .orderCoupon(1L, "Kupon Pisang",
+                        10000L, "eb558e9f-1c39-460e-8860-71af6af63bd7");
 
         ProductCoupon productCoupon2 = productCouponFactory
-                .orderCoupon(1L, "Kupon Ramadhan Sale",
-                        50000L, 100000L);
+                .orderCoupon(1L, "Kupon Indomie",
+                        50000L, "eb558e9f-1c39-460e-8860-71af6af63bd7");
 
         tcCoupons.add(productCoupon1);
         tcCoupons.add(productCoupon2);
