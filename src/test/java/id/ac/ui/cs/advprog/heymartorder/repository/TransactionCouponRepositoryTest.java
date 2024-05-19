@@ -39,12 +39,12 @@ public class TransactionCouponRepositoryTest {
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
         TransactionCoupon transactionCoupon1 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
-                        10000L, false, 50000L);
+                .orderCoupon(1L, "Kupon 4.4.24",
+                        1000L, 50000L);
 
         TransactionCoupon transactionCoupon2 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd7", "Kupon Ramadhan Sale",
-                        50000L, false, 100000L);
+                .orderCoupon(1L, "Kupon Ramadhan Sale",
+                        5000L, 100000L);
 
         tcCoupons.add(transactionCoupon1);
         tcCoupons.add(transactionCoupon2);
@@ -56,18 +56,17 @@ public class TransactionCouponRepositoryTest {
         TransactionCoupon tcCoupon = tcCoupons.getFirst();
         Mockito.when(transactionCouponRepository.save(Mockito.any(TransactionCoupon.class)))
                 .thenReturn(tcCoupon); // Define behavior for save method
-        Mockito.when(transactionCouponRepository.findTransactionCouponByCouponId(Mockito.anyString()))
+        Mockito.when(transactionCouponRepository.findByCouponId(Mockito.anyString()))
                 .thenReturn(tcCoupon); // Define behavior for find by ID method
 
         TransactionCoupon savedTcCoupon = transactionCouponRepository.save(tcCoupon);
 //        System.out.println(result);
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.getFirst().getCouponId());
+        TransactionCoupon findResult = transactionCouponRepository.findByCouponId(tcCoupons.getFirst().getCouponId());
         assertEquals(tcCoupon.getCouponId(), savedTcCoupon.getCouponId());
         assertEquals(tcCoupon.getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupon.getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupon.getCouponNominal(), findResult.getCouponNominal());
         assertEquals(tcCoupon.getMinimumBuy(), findResult.getMinimumBuy());
-        assertEquals(tcCoupon.isUsed(), findResult.isUsed());
 
         Assertions.assertEquals(savedTcCoupon.getCouponId(), tcCoupon.getCouponId());
     }
@@ -76,22 +75,21 @@ public class TransactionCouponRepositoryTest {
     void testFindIdIfIdFound() {
         transactionCouponRepository.saveAll(tcCoupons);
         System.out.println(transactionCouponRepository);
-        Mockito.when(transactionCouponRepository.findTransactionCouponByCouponId(Mockito.anyString()))
+        Mockito.when(transactionCouponRepository.findByCouponId(Mockito.anyString()))
                 .thenReturn(tcCoupons.get(0)); // Define behavior for find by ID method
 
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.get(0).getCouponId());
+        TransactionCoupon findResult = transactionCouponRepository.findByCouponId(tcCoupons.get(0).getCouponId());
         assertEquals(tcCoupons.get(0).getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupons.get(0).getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupons.get(0).getCouponNominal(), findResult.getCouponNominal());
         assertEquals(tcCoupons.get(0).getMinimumBuy(), findResult.getMinimumBuy());
-        assertEquals(tcCoupons.get(0).isUsed(), findResult.isUsed());
     }
 
     @Test
     void testFindIdIfIdNotFound() {
         transactionCouponRepository.saveAll(tcCoupons);
 
-        TransactionCoupon findResult = transactionCouponRepository.findTransactionCouponByCouponId("zczc");
+        TransactionCoupon findResult = transactionCouponRepository.findByCouponId("zczc");
         assertNull(findResult);
     }
 
@@ -118,7 +116,7 @@ public class TransactionCouponRepositoryTest {
         // Assert: Check that the coupon was deleted
         long countAfterDelete = transactionCouponRepository.count();
         assertEquals(0, countAfterDelete);
-        assertNull(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupon.getCouponId()));
+        assertNull(transactionCouponRepository.findByCouponId(tcCoupon.getCouponId()));
     }
 
     @Test
@@ -130,7 +128,7 @@ public class TransactionCouponRepositoryTest {
         transactionCouponRepository.delete(tcCoupon2);
 
         List<TransactionCoupon> tcList = new ArrayList<>();
-        tcList.add(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupon1.getCouponId()));
+        tcList.add(transactionCouponRepository.findByCouponId(tcCoupon1.getCouponId()));
         System.out.println(tcList);
         assertFalse(tcList.isEmpty()); // Assert true because the first product should still exist
     }
