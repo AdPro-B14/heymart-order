@@ -83,16 +83,4 @@ public class TransactionCouponController {
         return ResponseEntity.ok(SuccessResponse.builder().success(true).build());
     }
 
-    @GetMapping("/transaction-coupon-consumers/{id}")
-    public ResponseEntity<List<Long>> getTransactionCouponConsumers(@RequestHeader(value = "Authorization") String id,
-                                                                    @PathVariable("id") String couponId) throws IllegalAccessException {
-        String token = id.replace("Bearer ", "");
-        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")
-                && !jwtService.extractRole(token).equalsIgnoreCase("admin")) {
-            throw new IllegalAccessException("You have no access.");
-        }
-
-        return ResponseEntity.ok(transactionCouponService.getConsumers(couponId));
-    }
-
 }

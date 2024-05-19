@@ -11,5 +11,4 @@ public interface TransactionCouponService {
     public List<TransactionCoupon> findBySupermarketId(Long supermarketId);
     public List<TransactionCoupon> findAll();
     public void delete(String id);
-    public List<Long> getConsumers(String couponId);
 }
