@@ -21,22 +21,17 @@ public class TransactionCouponTest {
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
         TransactionCoupon transactionCoupon1 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
-                        10000L, false, 50000L);
+                .orderCoupon(1L, "Kupon 4.4.24",
+                        10000L, 50000L);
 
         TransactionCoupon transactionCoupon2 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd7", "Kupon Ramadhan Sale",
-                        50000L, false, 100000L);
+                .orderCoupon(1L, "Kupon Ramadhan Sale",
+                        50000L, 100000L);
 
 
         tcCoupons.add(transactionCoupon1);
         tcCoupons.add(transactionCoupon2);
 
-    }
-
-    @Test
-    void testGetCouponId() {
-        assertEquals("eb558e9f-1c39-460e-8860-71af6af63bd6", tcCoupons.getFirst().getCouponId());
     }
 
     @Test
@@ -54,9 +49,5 @@ public class TransactionCouponTest {
         assertEquals(50000L, tcCoupons.getFirst().getMinimumBuy());
     }
 
-    @Test
-    void testGetCouponIsUsed() {
-        assertFalse(tcCoupons.getFirst().isUsed);
-    }
 
 }
