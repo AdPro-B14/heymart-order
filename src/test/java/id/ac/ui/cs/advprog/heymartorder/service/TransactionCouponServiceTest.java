@@ -33,12 +33,12 @@ public class TransactionCouponServiceTest {
         TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
         TransactionCoupon transactionCoupon1 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
-                        10000L, false, 50000L);
+                .orderCoupon(1L, "Kupon 4.4.24",
+                        10000L, 50000L);
 
         TransactionCoupon transactionCoupon2 = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd7", "Kupon Ramadhan Sale",
-                        50000L, false, 100000L);
+                .orderCoupon(1L, "Kupon Ramadhan Sale",
+                        50000L, 100000L);
 
         tcCoupons.add(transactionCoupon1);
         tcCoupons.add(transactionCoupon2);
@@ -59,38 +59,11 @@ public class TransactionCouponServiceTest {
         assertThrows(IllegalArgumentException.class, () -> transactionCouponService.createTransactionCoupon(null));
     }
 
-    @Test
-    void testUpdateIsUsed() {
-        TransactionCoupon tcCoupon = tcCoupons.getFirst();
-
-        TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
-        TransactionCoupon newTcCoupon = transactionCouponFactory
-                .orderCoupon("eb558e9f-1c39-460e-8860-71af6af63bd6", "Kupon 4.4.24",
-                        10000L, false, 50000L);
-        doReturn(tcCoupon).when(transactionCouponRepository).findTransactionCouponByCouponId(tcCoupon.getCouponId());
-        doReturn(newTcCoupon).when(transactionCouponRepository).save(any(TransactionCoupon.class));
-
-        TransactionCoupon result = transactionCouponService.updateIsUsed(tcCoupon.getCouponId(), true);
-
-        assertEquals(tcCoupon.getCouponId(), result.getCouponId());
-        assertTrue(result.isUsed());
-        verify(transactionCouponRepository, times(1)).save(any(TransactionCoupon.class));
-    }
-
-    @Test
-    void testUpdateIsUsedInvalidCouponId() {
-        doReturn(null).when(transactionCouponRepository).findTransactionCouponByCouponId("foobar");
-
-        assertThrows(NoSuchElementException.class,
-                () -> transactionCouponService.updateIsUsed("foobar", true));
-
-        verify(transactionCouponRepository, times(0)).save(any(TransactionCoupon.class));
-    }
 
     @Test
     void testFindIdIfIdFound() {
         TransactionCoupon tcCoupon = tcCoupons.getFirst();
-        doReturn(tcCoupon).when(transactionCouponRepository).findTransactionCouponByCouponId(tcCoupon.getCouponId());
+        doReturn(tcCoupon).when(transactionCouponRepository).findByCouponId(tcCoupon.getCouponId());
 
         TransactionCoupon result = transactionCouponService.findById(tcCoupon.getCouponId());
         assertEquals(tcCoupon.getCouponId(), result.getCouponId());
@@ -98,8 +71,8 @@ public class TransactionCouponServiceTest {
 
     @Test
     void testFindIdIfIdNotFound() {
-        doReturn(null).when(transactionCouponRepository).findTransactionCouponByCouponId("zczc");
-        assertNull(transactionCouponRepository.findTransactionCouponByCouponId("zczc"));
+        doReturn(null).when(transactionCouponRepository).findByCouponId("zczc");
+        assertNull(transactionCouponRepository.findByCouponId("zczc"));
     }
 
     @Test
@@ -113,15 +86,7 @@ public class TransactionCouponServiceTest {
         }
         assertEquals(2, results.size());
     }
-
-    @Test
-    void deleteTransactionCouponValid() {
-        when(transactionCouponRepository.findTransactionCouponByCouponId(tcCoupons.getFirst().getCouponId()))
-                .thenReturn(tcCoupons.getFirst());
-
-        transactionCouponService.delete(tcCoupons.getFirst().getCouponId());
-    }
-
+    
     @Test
     void deleteTransactionCouponInvalid() {
         assertThrows(IllegalArgumentException.class, () -> transactionCouponService.delete(null));
