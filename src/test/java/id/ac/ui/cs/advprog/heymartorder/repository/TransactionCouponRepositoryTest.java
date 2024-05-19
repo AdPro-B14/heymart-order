@@ -53,32 +53,30 @@ public class TransactionCouponRepositoryTest {
 
     @Test
     void testSaveCreate() {
-        TransactionCoupon tcCoupon = tcCoupons.getFirst();
+        TransactionCoupon tcCoupon = tcCoupons.get(0);
         Mockito.when(transactionCouponRepository.save(Mockito.any(TransactionCoupon.class)))
-                .thenReturn(tcCoupon); // Define behavior for save method
-        Mockito.when(transactionCouponRepository.findByCouponId(Mockito.anyString()))
-                .thenReturn(tcCoupon); // Define behavior for find by ID method
+                .thenReturn(tcCoupon);
+        Mockito.when(transactionCouponRepository.findByCouponId(tcCoupon.getCouponId()))
+                .thenReturn(tcCoupon);
 
         TransactionCoupon savedTcCoupon = transactionCouponRepository.save(tcCoupon);
-//        System.out.println(result);
-        TransactionCoupon findResult = transactionCouponRepository.findByCouponId(tcCoupons.getFirst().getCouponId());
-        assertEquals(tcCoupon.getCouponId(), savedTcCoupon.getCouponId());
-        assertEquals(tcCoupon.getCouponId(), findResult.getCouponId());
+        TransactionCoupon findResult = transactionCouponRepository.findByCouponId(tcCoupon.getCouponId());
+
         assertEquals(tcCoupon.getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupon.getCouponNominal(), findResult.getCouponNominal());
         assertEquals(tcCoupon.getMinimumBuy(), findResult.getMinimumBuy());
-
-        Assertions.assertEquals(savedTcCoupon.getCouponId(), tcCoupon.getCouponId());
+        assertEquals(savedTcCoupon.getCouponId(), tcCoupon.getCouponId());
     }
 
     @Test
     void testFindIdIfIdFound() {
-        transactionCouponRepository.saveAll(tcCoupons);
-        System.out.println(transactionCouponRepository);
-        Mockito.when(transactionCouponRepository.findByCouponId(Mockito.anyString()))
-                .thenReturn(tcCoupons.get(0)); // Define behavior for find by ID method
+        Mockito.when(transactionCouponRepository.saveAll(tcCoupons)).thenReturn(tcCoupons);
+        Mockito.when(transactionCouponRepository.findByCouponId(tcCoupons.get(0).getCouponId()))
+                .thenReturn(tcCoupons.get(0));
 
+        transactionCouponRepository.saveAll(tcCoupons);
         TransactionCoupon findResult = transactionCouponRepository.findByCouponId(tcCoupons.get(0).getCouponId());
+
         assertEquals(tcCoupons.get(0).getCouponId(), findResult.getCouponId());
         assertEquals(tcCoupons.get(0).getCouponName(), findResult.getCouponName());
         assertEquals(tcCoupons.get(0).getCouponNominal(), findResult.getCouponNominal());
