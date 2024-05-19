@@ -26,6 +26,7 @@ public class ProductCouponController {
 
     private final ProductCouponService productCouponService;
 
+    ProductCouponFactory productCouponFactory = new ProductCouponFactory();
 
     @GetMapping("/product-coupon/{id}")
     public ResponseEntity<ProductCoupon> getProductCoupon(@PathVariable("id") String couponId) {
@@ -45,15 +46,12 @@ public class ProductCouponController {
         return ResponseEntity.ok(allProductCoupon);
     }
 
-    // supermarketId /{id}
     @GetMapping("/all-product-coupon")
     public ResponseEntity<List<ProductCoupon>> getAllProductCoupons() {
         List<ProductCoupon> allProductCoupon = productCouponService.findAll();
         return ResponseEntity.ok(allProductCoupon);
     }
 
-
-    // supermarketId
     @PostMapping("/create-product-coupon")
     public ResponseEntity<ProductCoupon> addProductCoupon(@RequestHeader(value = "Authorization") String id,
                                                                   @RequestBody AddProductCouponRequest request) throws IllegalAccessException {
@@ -63,7 +61,6 @@ public class ProductCouponController {
             throw new IllegalAccessException("You have no access.");
         }
 
-        ProductCouponFactory productCouponFactory = new ProductCouponFactory();
         ProductCoupon tcCoupon = productCouponFactory
                 .orderCoupon(request.supermarketId, request.couponName, request.couponNominal, request.productId);
 

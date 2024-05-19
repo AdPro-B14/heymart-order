@@ -31,6 +31,7 @@ public class TransactionCouponController {
 
     private final TransactionCouponService transactionCouponService;
 
+    TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
 
 
     @GetMapping("/transaction-coupon/{id}")
@@ -45,7 +46,6 @@ public class TransactionCouponController {
         return ResponseEntity.ok(allTransactionCoupon);
     }
 
-    // supermarketId /{id}
     @GetMapping("/all-transaction-coupon")
     public ResponseEntity<List<TransactionCoupon>> getAllTransactionCoupons() {
         List<TransactionCoupon> allTransactionCoupon = transactionCouponService.findAll();
@@ -53,7 +53,6 @@ public class TransactionCouponController {
     }
 
 
-    // supermarketId
     @PostMapping("/create-transaction-coupon")
     public ResponseEntity<TransactionCoupon> addTransactionCoupon(@RequestHeader(value = "Authorization") String id,
                                                                   @RequestBody AddTransactionCouponRequest request) throws IllegalAccessException {
@@ -63,7 +62,6 @@ public class TransactionCouponController {
             throw new IllegalAccessException("You have no access.");
         }
 
-        TransactionCouponFactory transactionCouponFactory = new TransactionCouponFactory();
         TransactionCoupon tcCoupon = transactionCouponFactory
                 .orderCoupon(request.supermarketId, request.couponName, request.couponNominal, request.minimumBuy);
 
