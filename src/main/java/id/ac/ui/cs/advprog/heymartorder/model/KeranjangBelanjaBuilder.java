@@ -14,8 +14,8 @@ public class KeranjangBelanjaBuilder {
     }
 
     public KeranjangBelanjaBuilder setSupermarketId(Long supermarketId) {
-        if (supermarketId == null)
-            throw new IllegalArgumentException();
+//        if (supermarketId == null)
+//            throw new IllegalArgumentException();
         this.supermarketId = supermarketId;
         return this;
     }

@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,11 +16,12 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
 
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
-        return new KeranjangBelanjaBuilder()
-            .setId(userId)
-            .setSupermarketId(null)
-            .setProductMap(new HashMap<String, Integer>())
-            .build();
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+                                            .setId(userId)
+                                            .setSupermarketId(null)
+                                            .setProductMap(new HashMap<String, Integer>())
+                                            .build();
+        return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
     @Override
@@ -50,8 +52,7 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
                 }
             }
             else {
-                return null;
-                // todo tambahin error
+                throw new IllegalArgumentException();
             }
         }
         return keranjangBelanja;
@@ -60,6 +61,11 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     @Override
     public Integer countTotal(HashMap<String, Integer> productMap) {
         // todo perlu harga dari produk
+//        Long total = 0;
+        /** For string in productMap:
+         * Manggil findById untuk tiap string
+         * total += Product.getharga * Integer dari productMapnya
+         */
         return null;
     }
 
