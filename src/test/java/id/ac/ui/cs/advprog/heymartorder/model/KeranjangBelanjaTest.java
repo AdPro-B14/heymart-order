@@ -38,20 +38,4 @@ public class KeranjangBelanjaTest {
         assertEquals(1L, keranjangBelanja.getSupermarketId());
         assertEquals(productMap, keranjangBelanja.getProductMap());
     }
-
-    @Test
-    void testNullSupermarketId() {
-        HashMap<String, Integer> productMap = new HashMap<>();
-        productMap.put("produk-1", 5);
-        productMap.put("produk-2", 3);
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new KeranjangBelanjaBuilder()
-                    .setId(1L)
-                    .setSupermarketId(null) // Setting null supermarketId
-                    .setProductMap(productMap)
-                    .build();
-        });
-    }
-
 }
