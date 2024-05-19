@@ -2,7 +2,6 @@ package id.ac.ui.cs.advprog.heymartorder.controller;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.*;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
-import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import id.ac.ui.cs.advprog.heymartorder.service.KeranjangBelanjaService;
 import lombok.RequiredArgsConstructor;
@@ -31,38 +30,69 @@ public class KeranjangBelanjaController {
     @Autowired
     private KeranjangBelanjaService keranjangBelanjaService;
 
-//    @GetMapping("get-keranjang/{userId}")
-//    public ResponseEntity<GetAllProductOfUserResponse> allProductOfUser(@PathVariable Long userId) {
-//        HashMap<String, Integer> allProduct = keranjangBelanjaService.findKeranjangById(userId).getProductMap();
-//        GetAllProductOfUserResponse response = GetAllProductOfUserResponse.builder().productMap(allProduct).build();
-//        return ResponseEntity.ok(response);
-//    }
+    @PostMapping("/create")
+    public ResponseEntity<KeranjangBelanja> createKeranjang(@RequestHeader (value = "Authorization") String token) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        if (!jwtService.extractRole(jwt).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+        Long userId = jwtService.extractUserId(jwt);
+        return ResponseEntity.ok(keranjangBelanjaService.createKeranjangBelanja(userId));
+    }
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<KeranjangBelanja> getKeranjang(@PathVariable Long userId) {
-//        return ResponseEntity.ok(keranjangBelanjaService.findKeranjangById(userId));
-//    }
+    @GetMapping("")
+    public ResponseEntity<KeranjangBelanja> getKeranjang(@RequestHeader(value = "Authorization") String token) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        if (!jwtService.extractRole(jwt).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+        Long userId = jwtService.extractUserId(jwt);
 
-//    @PostMapping("/create/{userId}")
-//    public ResponseEntity<KeranjangBelanja> createKeranjang(@PathVariable Long userId,
-//                                                            @RequestBody CreateKeranjangRequest keranjang)) {
-//        return ResponseEntity.ok(keranjangBelanjaService.createKeranjangBelanja(userId));
-//    }
+        KeranjangBelanja keranjangBelanja = keranjangBelanjaService.findKeranjangById(userId);
+        return ResponseEntity.ok(keranjangBelanja);
+    }
 
-//    @PostMapping("")
-//    public ResponseEntity<KeranjangBelanja> createKeranjang(@RequestHeader (value = "Authorization") String token,
-//                                                            @RequestBody CreateKeranjangRequest keranjang) throws IllegalAccessException {
-//
-//        return ResponseEntity.ok(keranjangBelanjaService.createKeranjangBelanja(keranjang.userId));
-//    }
+    @PostMapping("/add-product")
+    public ResponseEntity<KeranjangBelanja> addProductToKeranjang(@RequestHeader(value = "Authorization") String token,
+                                                                  @RequestBody AddProductRequest request) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        if (!jwtService.extractRole(jwt).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+        Long userId = jwtService.extractUserId(jwt);
+        try {
+            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.addProductToKeranjang(userId, request.productId, request.supermarketId);
+            return ResponseEntity.ok(keranjangBelanja);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Supermarket Id Mismatch");
+        }
 
-//    @PostMapping("/add-product/{userId}/{productId}")
-//    public ResponseEntity<> addProductToKeranjang(@PathVariable Long userId, String productId) {
-//        return null;
-//    }
+    }
 
-//    @PostMapping("/delete-product/{userId}/{productId}")
-//    public ResponseEntity<> addProductToKeranjang(@PathVariable Long userId, String productId) {
-//        return null;
-//    }
+    @PostMapping("/remove-product")
+    public ResponseEntity<KeranjangBelanja> removeProductFromKeranjang(@RequestHeader(value = "Authorization") String token,
+                                                  @RequestBody RemoveProductRequest request) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        if (!jwtService.extractRole(jwt).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+
+        Long userId = jwtService.extractUserId(jwt);
+        KeranjangBelanja keranjangBelanja = keranjangBelanjaService.removeProductFromKeranjang(userId, request.productId);
+
+        return ResponseEntity.ok(keranjangBelanja);
+    }
+
+    @PostMapping("/clear")
+    public ResponseEntity<KeranjangBelanja> clearKeranjang(@RequestHeader(value = "Authorization") String token) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        if (!jwtService.extractRole(jwt).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+
+        Long userId = jwtService.extractUserId(jwt);
+        KeranjangBelanja keranjangBelanja = keranjangBelanjaService.clearKeranjang(userId);
+
+        return ResponseEntity.ok(keranjangBelanja);
+    }
 }

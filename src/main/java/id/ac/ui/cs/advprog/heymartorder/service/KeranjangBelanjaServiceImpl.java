@@ -7,6 +7,7 @@ import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,11 +32,13 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     }
 
     @Override
-    public void clearKeranjang(Long userId) {
+    public KeranjangBelanja clearKeranjang(Long userId) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
+        List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
         keranjangBelanja.setSupermarketId(null);
-        keranjangBelanja.getListKeranjangItem().clear();
-        keranjangBelanjaRepository.save(keranjangBelanja);
+        items.clear();
+
+        return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
     @Override

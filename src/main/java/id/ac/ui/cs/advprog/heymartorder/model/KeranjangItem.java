@@ -12,10 +12,10 @@ import lombok.*;
 @Getter
 public class KeranjangItem {
     @Id
-    @Column(name = "productId", nullable = false)
+    @Column(name = "productId")
     private String productId;
 
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount")
     private Integer amount;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
