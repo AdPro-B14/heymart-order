@@ -101,9 +101,9 @@ public class TransactionCouponController {
 //        return ResponseEntity.ok(SuccessResponse.builder().success(true).build());
 //    }
 
-    // validasi make service validate consumer
-    @GetMapping("/transaction-coupon-validation")
-    public ResponseEntity<Boolean> validateCoupon(@RequestParam("couponId") String couponId, @RequestParam("consumerId") Long consumerId) {
-        return ResponseEntity.ok(transactionCouponService.validateConsumer(couponId, consumerId));
-    }
+//    // validasi make service validate consumer
+//    @GetMapping("/transaction-coupon-validation")
+//    public ResponseEntity<Boolean> validateCoupon(@RequestParam("couponId") String couponId, @RequestParam("consumerId") Long consumerId) {
+//        return ResponseEntity.ok(transactionCouponService.validateConsumer(couponId, consumerId));
+//    }
 }
