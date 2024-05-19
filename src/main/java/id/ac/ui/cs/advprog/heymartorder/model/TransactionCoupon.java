@@ -17,7 +17,6 @@ import java.util.List;
 public class TransactionCoupon extends Coupon {
 
     long minimumBuy;
-    List<Long> consumers = new ArrayList<>();
 
     public TransactionCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
         super(supermarketId, couponName, couponNominal);
