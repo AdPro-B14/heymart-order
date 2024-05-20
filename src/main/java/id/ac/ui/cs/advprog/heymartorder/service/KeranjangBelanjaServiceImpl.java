@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangItem;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
+import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
 
     @Autowired
     private KeranjangBelanjaRepository keranjangBelanjaRepository;
+
+    @Autowired
+    private KeranjangItemRepository keranjangItemRepository;
 
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
@@ -35,8 +39,13 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     public KeranjangBelanja clearKeranjang(Long userId) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
-        keranjangBelanja.setSupermarketId(null);
+
+        for (KeranjangItem item : items) {
+            keranjangItemRepository.delete(item);
+        }
+
         items.clear();
+        keranjangBelanja.setSupermarketId(null);
 
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
@@ -91,7 +100,14 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         }
 
         if (itemToRemove != null) {
+            KeranjangItem keranjangItem = keranjangItemRepository.findByProductId(itemToRemove.getProductId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+            keranjangItemRepository.delete(keranjangItem);
             items.remove(itemToRemove);
+        }
+
+        if (items.isEmpty()) {
+            keranjangBelanja.setSupermarketId(null);
         }
 
         return keranjangBelanjaRepository.save(keranjangBelanja);

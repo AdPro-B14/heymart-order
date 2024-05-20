@@ -18,7 +18,7 @@ public class KeranjangItem {
     @Column(name = "amount")
     private Integer amount;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", nullable = false)
     @JsonIgnoreProperties(value = {"keranjangitem", "handler", "hibernateLazyInitializer"}, allowSetters = true)
     @ToString.Exclude
