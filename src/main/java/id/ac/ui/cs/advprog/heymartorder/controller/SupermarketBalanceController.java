@@ -26,22 +26,11 @@ public class SupermarketBalanceController {
 
     private final WebClient webClient;
 
-    @PostMapping("/{id}")
+    @PostMapping("/create/{id}")
     public ResponseEntity<SupermarketBalance> createBalance (@RequestHeader(value="Authorization") String id,
                                                           @PathVariable("id") Long supermarketId) throws IllegalAccessException {
         String token = id.replace("Bearer ", "");
-        String email = jwtService.extractEmail(token);
-        GetSupermarketResponse supermarketResponse = webClient.get()
-                .uri(GATEWAY_URL + "/api/store/supermarket/supermarket",
-                uriBuilder -> uriBuilder.queryParam("id", supermarketId).build())
-                .retrieve()
-                .bodyToMono(GetSupermarketResponse.class)
-                .block();
-        assert supermarketResponse != null;
-        List<String> managers = supermarketResponse.getManagerEmails();
-        boolean userManageSupermarket = managers.contains(email);
-        if (!jwtService.extractRole(token).equalsIgnoreCase("admin")
-        && !userManageSupermarket) {
+        if (!jwtService.extractRole(token).equalsIgnoreCase("admin")) {
             throw new IllegalAccessException("You have no access.");
         }
         if (!supermarketBalanceService.existsSupermarketBalanceById(supermarketId)) {

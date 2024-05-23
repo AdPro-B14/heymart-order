@@ -24,7 +24,7 @@ public class CustomerBalanceController {
 
     private final WebClient webClient;
 
-    @PostMapping("/")
+    @PostMapping("/create/")
     public ResponseEntity<CustomerBalance> createBalance (@RequestHeader(value="Authorization") String id)
             throws IllegalAccessException {
         String token = id.replace("Bearer ", "");
