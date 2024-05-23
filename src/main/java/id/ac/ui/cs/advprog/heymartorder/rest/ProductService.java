@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.heymartorder.service;
+package id.ac.ui.cs.advprog.heymartorder.rest;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.GetProductResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ProductService {
     private final WebClient webClient;
 
-    public ProductService(@Value("${spring.route.product_url}") String productUrl) {
+    public ProductService(@Value("${spring.route.gateway_url}") String productUrl) {
         this.webClient = WebClient.builder().baseUrl(productUrl + "/api/store/product").build();
     }
 

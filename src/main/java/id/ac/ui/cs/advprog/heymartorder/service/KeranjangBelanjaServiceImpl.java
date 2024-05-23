@@ -2,15 +2,13 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.GetProductResponse;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
-import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangItem;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangItemRepository;
+import id.ac.ui.cs.advprog.heymartorder.rest.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
