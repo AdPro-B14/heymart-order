@@ -88,3 +88,15 @@ tasks.test {
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
 }
+
+tasks.test {
+    filter {
+        excludeTestsMatching("*FunctionalTest")
+    }
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
