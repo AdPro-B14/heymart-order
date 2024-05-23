@@ -24,20 +24,15 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
         }
     }
 
-    @Override
-    public TransactionCoupon updateIsUsed(String couponId, boolean isUsed) {
-        TransactionCoupon tcCoupon = transactionCouponRepository.findTransactionCouponByCouponId(couponId);
-        if (tcCoupon != null) {
-            tcCoupon.setUsed(isUsed); // Update the existing coupon
-            transactionCouponRepository.save(tcCoupon); // Save the updated coupon
-            return tcCoupon;
-        } else {
-            throw new NoSuchElementException();
-        }
-    }
+
     @Override
     public TransactionCoupon findById(String couponId) {
-        return transactionCouponRepository.findTransactionCouponByCouponId(couponId);
+        return transactionCouponRepository.findByCouponId(couponId);
+    }
+
+    @Override
+    public List<TransactionCoupon> findBySupermarketId(Long supermarketId) {
+        return transactionCouponRepository.findBySupermarketId(supermarketId);
     }
 
     @Override
@@ -54,4 +49,5 @@ public class TransactionCouponServiceImpl implements TransactionCouponService {
             transactionCouponRepository.delete(tcCoupon);
         }
     }
+
 }

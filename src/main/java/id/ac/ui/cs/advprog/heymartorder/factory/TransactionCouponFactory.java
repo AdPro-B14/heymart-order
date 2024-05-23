@@ -2,14 +2,25 @@ package id.ac.ui.cs.advprog.heymartorder.factory;
 
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 
+import java.util.List;
+
 public class TransactionCouponFactory {
 
-    public TransactionCoupon orderCoupon(String couponId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        TransactionCoupon coupon = createCoupon(couponId, couponName, couponNominal, isUsed, minimumBuy);
+    public TransactionCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        TransactionCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, minimumBuy);
         coupon.prepare();
         return coupon;
     }
-    public TransactionCoupon createCoupon(String couponId, String couponName, Long couponNominal, boolean isUsed, Long minimumBuy) {
-        return new TransactionCoupon(couponId, couponName, couponNominal, isUsed, minimumBuy);
+    public TransactionCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
+        if (couponNominal <= 0) {
+            throw new IllegalArgumentException("Coupon nominal must be greater than 0");
+        }
+        if (minimumBuy <= 0) {
+            throw new IllegalArgumentException("Minimum buy must be greater than 0");
+        }
+        if (minimumBuy <= couponNominal) {
+            throw new IllegalArgumentException("minimumBuy must be greater than couponNominal");
+        }
+        return new TransactionCoupon(supermarketId, couponName, couponNominal, minimumBuy);
     }
 }

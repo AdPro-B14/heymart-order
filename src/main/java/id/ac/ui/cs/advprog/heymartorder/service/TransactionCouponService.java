@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface TransactionCouponService {
     public TransactionCoupon createTransactionCoupon(TransactionCoupon tcCoupon);
-    public TransactionCoupon updateIsUsed(String couponId, boolean isUsed);
+//    public TransactionCoupon updateIsUsed(String couponId, boolean isUsed);
     public TransactionCoupon findById(String couponId);
+    public List<TransactionCoupon> findBySupermarketId(Long supermarketId);
     public List<TransactionCoupon> findAll();
     public void delete(String id);
-
 }

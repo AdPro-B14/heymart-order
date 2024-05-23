@@ -1,9 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,23 +10,24 @@ import lombok.Setter;
 public abstract class Coupon {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     String couponId;
+
+    Long supermarketId;
 
     String couponName;
     long couponNominal;
-    long minimumBuy;
-    boolean isUsed;
-    String productId;
 
-    Coupon(String couponId, String couponName, long couponNominal) {
-        this.couponId = couponId;
+
+    // supermarketId
+    Coupon(Long supermarketId, String couponName, long couponNominal) {
+        this.supermarketId = supermarketId;
         this.couponName = couponName;
         this.couponNominal = couponNominal;
     }
 
-    Coupon() {
-        // Default constructor
+    public Coupon() {
+
     }
 
     public abstract void prepare();
