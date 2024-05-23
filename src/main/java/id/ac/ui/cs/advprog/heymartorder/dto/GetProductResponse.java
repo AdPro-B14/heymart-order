@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.heymartorder.dto;
 
 public class GetProductResponse {
     public String UUID;
+
     public String name;
     public Integer stock;
     public Long price;
@@ -37,7 +38,4 @@ public class GetProductResponse {
     public void setPrice(Long price) {
         this.price = price;
     }
-
-
 }
-
