@@ -10,6 +10,6 @@ public interface KeranjangBelanjaService {
     KeranjangBelanja clearKeranjang(Long userId);
     KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId);
     KeranjangBelanja removeProductFromKeranjang(Long userId, String productId);
-    Integer countTotal(HashMap<String, Integer> productMap);
+    Long countTotal(Long userId);
     boolean checkout();
 }

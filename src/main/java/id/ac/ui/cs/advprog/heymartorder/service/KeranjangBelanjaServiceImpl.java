@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
+import id.ac.ui.cs.advprog.heymartorder.dto.GetProductResponse;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangItem;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
@@ -21,9 +24,12 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     @Autowired
     private KeranjangItemRepository keranjangItemRepository;
 
+    @Autowired
+    private ProductService productService;
+
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
-        KeranjangBelanja keranjangBelanja = new KeranjangBelanjaBuilder()
+        KeranjangBelanja keranjangBelanja = KeranjangBelanja.getBuilder()
                                             .setId(userId)
                                             .setSupermarketId(null)
                                             .build();
@@ -61,11 +67,25 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             throw new IllegalArgumentException("Supermarket ID mismatch");
         }
 
+        GetProductResponse productResponse = productService.getProductById(productId);
+        if (productResponse == null) {
+            throw new IllegalArgumentException("Product not found");
+        }
+
+        Integer stock = productResponse.getStock();
+        if (stock == 0) {
+            throw new IllegalArgumentException("Product is out of stock");
+        }
+
         boolean productExists = false;
         for (KeranjangItem item : items) {
             if (item.getProductId().equals(productId)) {
-                item.setAmount(item.getAmount() + 1);
-                productExists = true;
+                if (item.getAmount() + 1 <= stock) {
+                    item.setAmount(item.getAmount() + 1);
+                    productExists = true;
+                } else {
+                    throw new IllegalArgumentException("Insufficient stock");
+                }
                 break;
             }
         }
@@ -113,16 +133,25 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
-
     @Override
-    public Integer countTotal(HashMap<String, Integer> productMap) {
-        // todo perlu harga dari produk
-//        Long total = 0;
-        /** For string in productMap:
-         * Manggil findById untuk tiap string
-         * total += Product.getharga * Integer dari productMapnya
-         */
-        return null;
+    public Long countTotal(Long userId) {
+        KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
+        Long supermarketId = keranjangBelanja.getSupermarketId();
+        List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
+
+        List<GetProductResponse> products = productService.getAllProduct(supermarketId);
+        Map<String, Long> productPriceMap = products.stream()
+                .collect(Collectors.toMap(GetProductResponse::getUUID, GetProductResponse::getPrice));
+
+        long total = 0L;
+        for (KeranjangItem item : items) {
+            Long price = productPriceMap.get(item.getProductId());
+            if (price != null) {
+                total += price * item.getAmount();
+            }
+        }
+
+        return total;
     }
 
     @Override
