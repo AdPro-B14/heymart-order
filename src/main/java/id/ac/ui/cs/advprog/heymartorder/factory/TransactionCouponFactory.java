@@ -19,7 +19,10 @@ public class TransactionCouponFactory {
             throw new IllegalArgumentException("Minimum buy must be greater than 0");
         }
         if (minimumBuy <= couponNominal) {
-            throw new IllegalArgumentException("minimumBuy must be greater than couponNominal");
+            throw new IllegalArgumentException("Minimum buy must be greater than couponNominal");
+        }
+        if (couponName == null) {
+            throw new IllegalArgumentException("Coupon name cant be null");
         }
         return new TransactionCoupon(supermarketId, couponName, couponNominal, minimumBuy);
     }

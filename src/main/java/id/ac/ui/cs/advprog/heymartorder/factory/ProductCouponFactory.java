@@ -14,6 +14,9 @@ public class ProductCouponFactory {
         if (couponNominal <= 0) {
             throw new IllegalArgumentException("Coupon nominal must be greater than 0");
         }
+        if (couponName == null) {
+            throw new IllegalArgumentException("Coupon name cant be null");
+        }
         return new ProductCoupon(supermarketId, couponName, couponNominal, productId);
     }
 
