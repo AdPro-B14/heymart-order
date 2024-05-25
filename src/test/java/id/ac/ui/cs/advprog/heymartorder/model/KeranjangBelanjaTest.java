@@ -25,6 +25,38 @@ class KeranjangBelanjaTest {
     }
 
     @Test
+    void testSetId() {
+        Long userId = 1L;
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanja();
+        keranjangBelanja.setId(userId);
+
+        assertEquals(userId, keranjangBelanja.getId());
+    }
+
+    @Test
+    void testSetSupermarketId() {
+        Long supermarketId = 2L;
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanja();
+        keranjangBelanja.setSupermarketId(supermarketId);
+
+        assertEquals(supermarketId, keranjangBelanja.getSupermarketId());
+    }
+
+    @Test
+    void testGetAndSetListKeranjangItem() {
+        KeranjangBelanja keranjangBelanja = new KeranjangBelanja();
+        List<KeranjangItem> items = List.of(
+                KeranjangItem.getBuilder().setProductId("product1").setAmount(1).build(),
+                KeranjangItem.getBuilder().setProductId("product2").setAmount(2).build()
+        );
+
+        keranjangBelanja.setListKeranjangItem(items);
+
+        assertEquals(items, keranjangBelanja.getListKeranjangItem());
+    }
+
+
+    @Test
     void testAddAndRemoveKeranjangItem() {
         Long userId = 1L;
         KeranjangBelanja keranjangBelanja = new KeranjangBelanja();
@@ -59,4 +91,39 @@ class KeranjangBelanjaTest {
         assertFalse(items.contains(item1));
         assertTrue(items.contains(item2));
     }
+
+    @Test
+    void testEqualsAndHashCode() {
+        Long userId1 = 1L;
+        Long userId2 = 2L;
+
+        KeranjangBelanja keranjangBelanja1 = new KeranjangBelanja();
+        keranjangBelanja1.setId(userId1);
+
+        KeranjangBelanja keranjangBelanja2 = new KeranjangBelanja();
+        keranjangBelanja2.setId(userId1);
+
+        KeranjangBelanja keranjangBelanja3 = new KeranjangBelanja();
+        keranjangBelanja3.setId(userId2);
+
+        assertEquals(keranjangBelanja1, keranjangBelanja2);
+        assertNotEquals(keranjangBelanja1, keranjangBelanja3);
+        assertEquals(keranjangBelanja1.hashCode(), keranjangBelanja2.hashCode());
+        assertNotEquals(keranjangBelanja1.hashCode(), keranjangBelanja3.hashCode());
+    }
+
+    @Test
+    void testToString() {
+        Long userId = 1L;
+        Long supermarketId = 2L;
+
+        KeranjangBelanja keranjangBelanja = KeranjangBelanja.getBuilder()
+                .setId(userId)
+                .setSupermarketId(supermarketId)
+                .build();
+
+        String expected = "KeranjangBelanja(id=1, supermarketId=2, listKeranjangItem=[])";
+        assertEquals(expected, keranjangBelanja.toString());
+    }
+
 }
