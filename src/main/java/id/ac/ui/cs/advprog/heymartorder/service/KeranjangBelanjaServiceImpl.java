@@ -55,7 +55,7 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     }
 
     @Override
-    public KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId) {
+    public KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
 
@@ -65,7 +65,7 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             throw new IllegalArgumentException("Supermarket ID mismatch");
         }
 
-        GetProductResponse productResponse = productService.getProductById(productId);
+        GetProductResponse productResponse = productService.getProductById(productId, token);
         if (productResponse == null) {
             throw new IllegalArgumentException("Product not found");
         }
@@ -132,12 +132,12 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     }
 
     @Override
-    public Long countTotal(Long userId) {
+    public Long countTotal(Long userId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         Long supermarketId = keranjangBelanja.getSupermarketId();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
 
-        List<GetProductResponse> products = productService.getAllProduct(supermarketId);
+        List<GetProductResponse> products = productService.getAllProduct(supermarketId, token);
         Map<String, Long> productPriceMap = products.stream()
                 .collect(Collectors.toMap(GetProductResponse::getUUID, GetProductResponse::getPrice));
 
@@ -150,11 +150,5 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         }
 
         return total;
-    }
-
-    @Override
-    public boolean checkout() {
-        // todo kurangin stok
-        return false;
     }
 }

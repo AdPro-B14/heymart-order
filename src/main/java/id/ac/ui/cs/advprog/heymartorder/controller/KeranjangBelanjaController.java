@@ -61,10 +61,10 @@ public class KeranjangBelanjaController {
         }
         Long userId = jwtService.extractUserId(jwt);
         try {
-            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.addProductToKeranjang(userId, request.productId, request.supermarketId);
+            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.addProductToKeranjang(userId, request.productId, request.supermarketId, jwt);
             return ResponseEntity.ok(keranjangBelanja);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Supermarket Id Mismatch");
+            throw new IllegalArgumentException();
         }
 
     }
