@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
@@ -24,6 +25,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private KeranjangLogService logService;
 
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
@@ -51,11 +55,14 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         items.clear();
         keranjangBelanja.setSupermarketId(null);
 
+        CompletableFuture<Void> logFuture = logService.logCartCleared(userId);
+        logFuture.join();
+
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
     @Override
-    public KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId, String token) {
+    public synchronized KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
 
@@ -97,6 +104,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             items.add(newItem);
         }
 
+        CompletableFuture<Void> logFuture = logService.logProductAddedToCart(userId, productId);
+        logFuture.join();
+
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
@@ -127,6 +137,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         if (items.isEmpty()) {
             keranjangBelanja.setSupermarketId(null);
         }
+
+        CompletableFuture<Void> logFuture = logService.logProductRemovedFromCart(userId, productId);
+        logFuture.join();
 
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
