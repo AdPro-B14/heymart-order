@@ -84,31 +84,48 @@ class CustomerBalanceControllerTest {
         when(customerBalanceService.findCustomerBalanceById(userId)).thenReturn(expectedBalance);
         when(jwtService.extractRole("valid_token")).thenReturn("customer");
 
-        ResponseEntity<CustomerBalance> response = customerBalanceController.getBalanceByUserId(token, userId);
+        ResponseEntity<CustomerBalance> response = customerBalanceController.getBalance(token);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedBalance, response.getBody());
     }
 
     @Test
-    void testTopUpBalance() throws IllegalAccessException {
-        String token = "validToken";
-        String id = "Bearer " + token;
+    public void testTopUpBalanceSuccess() throws IllegalAccessException {
+        String token = "Bearer validToken";
         Long customerId = 1L;
-        BigDecimal amount = BigDecimal.valueOf(50.00);
+        BigDecimal amount = new BigDecimal("100.00");
         TopUpBalanceRequest request = new TopUpBalanceRequest();
-        request.setAmount(amount);
         CustomerBalance customerBalance = new CustomerBalance();
+        customerBalance.setId(customerId);
+        request.setAmount(amount);
 
-        when(jwtService.extractUserId(token)).thenReturn(customerId);
-        when(jwtService.extractRole(token)).thenReturn("customer");
-        when(customerBalanceService.findCustomerBalanceById(customerId)).thenReturn(customerBalance);
+        when(jwtService.extractRole(anyString())).thenReturn("customer");
+        when(jwtService.extractUserId(anyString())).thenReturn(customerId);
+        when(customerBalanceService.topUp(anyLong(), any(BigDecimal.class))).thenReturn(customerBalance);
 
-        ResponseEntity<CustomerBalance> response = customerBalanceController.topUpBalance(id, request);
+        ResponseEntity<CustomerBalance> response = customerBalanceController.topUpBalance(token, request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(customerBalance, response.getBody());
-        verify(customerBalanceService, times(1)).topUp(customerId, amount);
+    }
+
+    @Test
+    public void testTopUpBalanceForbidden() {
+        String token = "Bearer invalidToken";
+        TopUpBalanceRequest request = new TopUpBalanceRequest();
+        request.setAmount(new BigDecimal("100.00"));
+
+        when(jwtService.extractRole(anyString())).thenReturn("manager");
+
+        IllegalAccessException thrown = assertThrows(
+                IllegalAccessException.class,
+                () -> customerBalanceController.topUpBalance(token, request),
+                "Expected topUpBalance to throw, but it didn't"
+        );
+
+        assertEquals("You have no access.", thrown.getMessage());
+        verify(customerBalanceService, never()).topUp(anyLong(), any(BigDecimal.class));
     }
 
     @Test
