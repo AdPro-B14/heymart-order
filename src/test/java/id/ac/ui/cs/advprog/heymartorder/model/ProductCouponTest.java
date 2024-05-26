@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
-import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
+import id.ac.ui.cs.advprog.heymartorder.dto.AddProductCouponRequest;
 import id.ac.ui.cs.advprog.heymartorder.factory.ProductCouponFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ProductCouponTest {
@@ -86,6 +85,18 @@ public class ProductCouponTest {
         assertEquals("eb558e9f-1c39-460e-8860-71af6af63bd1", tcCoupons.getFirst().getCouponId());
     }
 
+    @Test
+    public void testEqualsSameObj() {
+        ProductCoupon tc = tcCoupons.getFirst(); // sut == system under test
+        assertTrue (tc.equals(tc));
+    }
+
+    @Test
+    public void testEqualsNull() {
+        ProductCoupon tc = tcCoupons.getFirst(); // sut == system under test
+        assertFalse(tc.equals(null));
+    }
+    
     @Test
     void testNoArgsInstance() {
         ProductCoupon productCoupon = new ProductCoupon();
