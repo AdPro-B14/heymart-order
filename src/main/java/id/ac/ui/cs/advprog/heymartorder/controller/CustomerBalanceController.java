@@ -38,10 +38,14 @@ public class CustomerBalanceController {
         return ResponseEntity.ok(customerBalanceService.findCustomerBalanceById(customerId));
     }
 
-    @GetMapping("/get-balance/{id}")
-    public ResponseEntity<CustomerBalance> getBalanceByUserId (@RequestHeader(value = "Authorization") String id,
-                                                                @PathVariable("id") Long userId) throws IllegalAccessException{
-        CustomerBalance customerBalance = customerBalanceService.findCustomerBalanceById(userId);
+    @GetMapping("/get-balance")
+    public ResponseEntity<CustomerBalance> getBalance (@RequestHeader(value = "Authorization") String id) throws IllegalAccessException{
+        String token = id.replace("Bearer ", "");
+        if (!jwtService.extractRole(token).equalsIgnoreCase("customer")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+        Long customerId = jwtService.extractUserId(token);
+        CustomerBalance customerBalance = customerBalanceService.findCustomerBalanceById(customerId);
         return ResponseEntity.ok(customerBalance);
     }
 
@@ -53,8 +57,7 @@ public class CustomerBalanceController {
             throw new IllegalAccessException("You have no access.");
         }
         Long customerId = jwtService.extractUserId(token);
-        CustomerBalance customerBalance = customerBalanceService.findCustomerBalanceById(customerId);
-        customerBalanceService.topUp(customerId, request.getAmount());
+        CustomerBalance customerBalance = customerBalanceService.topUp(customerId, request.getAmount());
         return ResponseEntity.ok(customerBalance);
     }
 }

@@ -71,7 +71,7 @@ public class CustomerBalanceStrategy implements BalanceStrategy<CustomerBalance>
         }
         BigDecimal updatedAmount = currentAmount.subtract(checkoutAmount);
         customerBalance.setAmount(updatedAmount);
-
+        customerBalanceRepository.save(customerBalance);
         return customerBalance;
     }
 }
