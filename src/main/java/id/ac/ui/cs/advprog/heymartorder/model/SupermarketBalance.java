@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SupermarketBalance extends Balance {
     Long supermarketId;

@@ -8,3 +8,6 @@
 ## Coupon Methods
 ![coupon profiling](images/couponProfiling1.png)
 ![coupon profiling](images/couponProfiling2.png)
+
+## Balance Methods
+![balance profiling](images/balanceProfiling.png)
