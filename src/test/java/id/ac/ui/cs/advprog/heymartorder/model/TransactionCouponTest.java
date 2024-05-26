@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TransactionCouponTest {
@@ -49,5 +48,32 @@ public class TransactionCouponTest {
         assertEquals(50000L, tcCoupons.getFirst().getMinimumBuy());
     }
 
+    @Test
+    void testSetMinimumBuy() {
+        tcCoupons.getFirst().setMinimumBuy(45000L);
+        assertEquals(45000L, tcCoupons.getFirst().getMinimumBuy());
+    }
 
+    @Test
+    public void testEqualsSameObj() {
+        TransactionCoupon tc = tcCoupons.getFirst(); // sut == system under test
+        assertTrue (tc.equals(tc));
+    }
+
+    @Test
+    public void testEqualsNull() {
+        TransactionCoupon tc = tcCoupons.getFirst(); // sut == system under test
+        assertFalse(tc.equals(null));
+    }
+
+    @Test
+    void testNoArgsInstance() {
+        TransactionCoupon transactionCoupon = new TransactionCoupon();
+        assertTrue(transactionCoupon instanceof Coupon);
+    }
+
+    @Test
+    void testToString() {
+        assertTrue(tcCoupons.getFirst().toString().contains("TransactionCoupon("));
+    }
 }

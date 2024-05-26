@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.factory.ProductCouponFactory;
 import id.ac.ui.cs.advprog.heymartorder.model.ProductCoupon;
+import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 import id.ac.ui.cs.advprog.heymartorder.repository.ProductCouponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class ProductCouponServiceTest {
 
         ProductCoupon productCoupon2 = productCouponFactory
                 .orderCoupon(1L, "Kupon Indomie",
-                        50000L, "eb558e9f-1c39-460e-8860-71af6af63bd7");
+                        50000L, "eb558e9f-1c39-460e-8860-71af6af63bd2");
 
         tcCoupons.add(productCoupon1);
         tcCoupons.add(productCoupon2);
@@ -75,6 +76,22 @@ public class ProductCouponServiceTest {
     }
 
     @Test
+    void testFindBySupermarketId() {
+        doReturn(tcCoupons).when(productCouponRepository).findBySupermarketId(1L);
+        List<ProductCoupon> results = productCouponService.findBySupermarketId(1L);
+        assertEquals(tcCoupons, results);
+    }
+
+    @Test
+    void testFindByProductId() {
+        List<ProductCoupon> pCoupons = new ArrayList<>();
+        pCoupons.add(tcCoupons.get(1));
+        doReturn(pCoupons).when(productCouponRepository).findByProductId("eb558e9f-1c39-460e-8860-71af6af63bd2");
+        List<ProductCoupon> results = productCouponService.findByProductId("eb558e9f-1c39-460e-8860-71af6af63bd2");
+        assertEquals(pCoupons, results);
+    }
+
+    @Test
     void testFindAll() {
         ProductCoupon tcCoupon = tcCoupons.get(1);
         doReturn(tcCoupons).when(productCouponRepository).findAll();
@@ -84,6 +101,13 @@ public class ProductCouponServiceTest {
             assertEquals(tcCoupons.get(i).getCouponId(), results.get(i).getCouponId());
         }
         assertEquals(2, results.size());
+    }
+
+    @Test
+    void testDeleteTransactionCouponValid() {
+        tcCoupons.getFirst().setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd0");
+
+        assertDoesNotThrow(() -> productCouponService.delete(tcCoupons.getFirst().getCouponId()));
     }
 
     @Test
