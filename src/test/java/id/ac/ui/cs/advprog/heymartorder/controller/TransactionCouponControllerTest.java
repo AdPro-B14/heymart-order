@@ -1,7 +1,9 @@
 package id.ac.ui.cs.advprog.heymartorder.controller;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
+import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
 import id.ac.ui.cs.advprog.heymartorder.factory.TransactionCouponFactory;
+import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import id.ac.ui.cs.advprog.heymartorder.service.TransactionCouponService;
@@ -90,6 +92,31 @@ public class TransactionCouponControllerTest {
 
         assertEquals(ResponseEntity.ok(tcCoupons), response);
         verify(transactionCouponService, times(1)).findAll();
+    }
+
+    @Test
+    void testCreateTransactionCouponSuccess() throws IllegalAccessException {
+        String token = "validToken";
+        String id = "Bearer " + token;
+        Long managerId = 1L;
+        AddTransactionCouponRequest request = AddTransactionCouponRequest.builder()
+                .supermarketId(123L)
+                .couponName("Murah meriah")
+                .couponNominal(1000L)
+                .minimumBuy(50000L)
+                .build();
+
+        when(jwtService.extractUserId(token)).thenReturn(managerId);
+        when(jwtService.extractRole(token)).thenReturn("manager");
+
+        TransactionCoupon tcCoupon = transactionCouponFactory.orderCoupon(request.supermarketId, request.couponName,
+                request.couponNominal,request.minimumBuy);
+        when(transactionCouponService.createTransactionCoupon(tcCoupon)).thenReturn(tcCoupon);
+
+        ResponseEntity<TransactionCoupon> responseEntity = transactionCouponController.addTransactionCoupon(token, request);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(tcCoupon, responseEntity.getBody());
     }
 
 

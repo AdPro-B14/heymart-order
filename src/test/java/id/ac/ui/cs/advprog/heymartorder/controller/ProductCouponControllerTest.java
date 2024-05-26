@@ -91,5 +91,63 @@ public class ProductCouponControllerTest {
         verify(productCouponService, times(1)).findAll();
     }
 
+    @PostMapping("/create-product-coupon")
+    public ResponseEntity<ProductCoupon> addProductCoupon(@RequestHeader(value = "Authorization") String id,
+                                                          @RequestBody AddProductCouponRequest request) throws IllegalAccessException {
+        String token = id.replace("Bearer ", "");
+        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")
+                && !jwtService.extractRole(token).equalsIgnoreCase("admin")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+
+        ProductCoupon tcCoupon = productCouponFactory
+                .orderCoupon(request.supermarketId, request.couponName, request.couponNominal, request.productId);
+
+        return ResponseEntity.ok(productCouponService.createProductCoupon(tcCoupon));
+    }
+
+//    @Test
+//    void testCreateBalance_NewCustomer() throws IllegalAccessException {
+//        String token = "validToken";
+//        String id = "Bearer " + token;
+//        Long customerId = 1L;
+//        CustomerBalance newCustomerBalance = new CustomerBalance();
+//
+//        when(jwtService.extractUserId(token)).thenReturn(customerId);
+//        when(jwtService.extractRole(token)).thenReturn("customer");
+//        when(customerBalanceService.existsCustomerBalanceById(customerId)).thenReturn(false);
+//        when(customerBalanceService.createCustomerBalance(customerId)).thenReturn(newCustomerBalance);
+//
+//        ResponseEntity<CustomerBalance> response = customerBalanceController.createBalance(id);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(newCustomerBalance, response.getBody());
+//        verify(customerBalanceService, times(1)).createCustomerBalance(customerId);
+//    }
+
+    @Test
+    void testCreateProductCouponSuccess() throws IllegalAccessException {
+        String token = "validToken";
+        String id = "Bearer " + token;
+        Long managerId = 1L;
+        AddProductCouponRequest request = AddProductCouponRequest.builder()
+                .supermarketId(123L)
+                .couponName("Discount 2024")
+                .couponNominal(1000L)
+                .productId("eb558e9f-1c39-460e-8860-71af6af63bd7")
+                .build();
+        when(jwtService.extractUserId(token)).thenReturn(managerId);
+        when(jwtService.extractRole(token)).thenReturn("manager");
+
+        ProductCoupon pCoupon = productCouponFactory.orderCoupon(request.supermarketId, request.couponName,
+                request.couponNominal,request.productId);
+        when(productCouponService.createProductCoupon(pCoupon)).thenReturn(pCoupon);
+
+        ResponseEntity<ProductCoupon> responseEntity = productCouponController.addProductCoupon(token, request);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(pCoupon, responseEntity.getBody());
+    }
+
 
 }
