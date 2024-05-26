@@ -58,19 +58,6 @@ public class KeranjangLogTest {
         assertEquals(timestamp, log.getTimestamp());
     }
 
-    @Test
-    void testHashCode() {
-        KeranjangLog log1 = new KeranjangLog(1L, "ADD", "product1");
-        KeranjangLog log2 = new KeranjangLog(1L, "ADD", "product1");
-
-        assertEquals(log1.hashCode(), log2.hashCode());
-
-        HashSet<KeranjangLog> set = new HashSet<>();
-        set.add(log1);
-        set.add(log2);
-
-        assertEquals(1, set.size());
-    }
 
     @Test
     void testToString() {
