@@ -47,7 +47,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             Long total = keranjangBelanjaService.countTotal(userId, token);
             KeranjangBelanja keranjangBelanja = keranjangBelanjaService.findKeranjangById(userId);
-            if (productCouponIds != null) {
+            if (productCouponIds != null && !productCouponIds.isEmpty()) {
                 total = applyProductCoupon(userId, token, productCouponIds);
             }
             if (transactionCouponId != null) {
@@ -57,7 +57,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             keranjangBelanjaService.clearKeranjang(userId);
             return total;
         } catch (Exception e) {
-            return 0L;
+            return keranjangBelanjaService.countTotal(userId, token);
         }
     }
 
@@ -84,7 +84,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             return currentTotal;
 
         } catch (Exception e) {
-            return 0L;
+            return keranjangBelanjaService.countTotal(userId, token);
         }
     }
 
@@ -99,7 +99,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 throw new IllegalArgumentException("Cart total is not enough to use coupon");
             }
         } catch (Exception e) {
-            return 0L;
+            return keranjangBelanjaService.countTotal(userId, token);
         }
     }
 
