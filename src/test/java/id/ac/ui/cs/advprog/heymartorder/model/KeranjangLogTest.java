@@ -1,9 +1,14 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
+
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class KeranjangLogTest {
+
     @Test
     void testKeranjangLogConstructorAndGetters() {
         Long userId = 1L;
@@ -51,5 +56,27 @@ public class KeranjangLogTest {
         assertEquals(action, log.getAction());
         assertEquals(productId, log.getProductId());
         assertEquals(timestamp, log.getTimestamp());
+    }
+
+    @Test
+    void testHashCode() {
+        KeranjangLog log1 = new KeranjangLog(1L, "ADD", "product1");
+        KeranjangLog log2 = new KeranjangLog(1L, "ADD", "product1");
+
+        assertEquals(log1.hashCode(), log2.hashCode());
+
+        HashSet<KeranjangLog> set = new HashSet<>();
+        set.add(log1);
+        set.add(log2);
+
+        assertEquals(1, set.size());
+    }
+
+    @Test
+    void testToString() {
+        KeranjangLog log = new KeranjangLog(1L, "ADD", "product1");
+        String expected = "KeranjangLog(id=null, userId=1, action=ADD, productId=product1, timestamp=" + log.getTimestamp() + ")";
+
+        assertEquals(expected, log.toString());
     }
 }
