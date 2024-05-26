@@ -9,6 +9,7 @@ import id.ac.ui.cs.advprog.heymartorder.rest.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -147,16 +148,12 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
     @Override
     public Long countTotal(Long userId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
-        Long supermarketId = keranjangBelanja.getSupermarketId();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
-
-        List<GetProductResponse> products = productService.getAllProduct(supermarketId, token);
-        Map<String, Long> productPriceMap = products.stream()
-                .collect(Collectors.toMap(GetProductResponse::getUUID, GetProductResponse::getPrice));
 
         long total = 0L;
         for (KeranjangItem item : items) {
-            Long price = productPriceMap.get(item.getProductId());
+            GetProductResponse product = productService.getProductById(item.getProductId(), token);
+            Long price = product.getPrice();
             if (price != null) {
                 total += price * item.getAmount();
             }
