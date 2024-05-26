@@ -1,6 +1,7 @@
 plugins {
     java
     jacoco
+	id("org.sonarqube") version "3.5.0.2730"
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
 }
@@ -75,7 +76,6 @@ tasks.register<Test>("functionalTest") {
 		includeTestsMatching("*FunctionalTest")
 	}
 }
-
 tasks.withType<Test>().configureEach {
 	useJUnitPlatform()
 }
@@ -84,22 +84,26 @@ tasks.test {
 	filter {
 		excludeTestsMatching("*FunctionalTest")
 	}
-
 	finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
-}
-
-tasks.test {
-    filter {
-        excludeTestsMatching("*FunctionalTest")
-    }
-
-    finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
+	classDirectories.setFrom(files(classDirectories.files.map {
+		fileTree(it) {
+			setExcludes(listOf(
+					"**/dto/**",
+					"**/model/**",
+					"**/*Application**",
+					"**/util/**",
+					"**/rest/**",
+					"**/exception/**",
+					"**/config/**"
+			))
+		}
+	}))
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
