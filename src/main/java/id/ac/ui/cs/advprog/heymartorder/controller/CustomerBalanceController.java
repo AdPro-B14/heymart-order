@@ -38,11 +38,11 @@ public class CustomerBalanceController {
         return ResponseEntity.ok(customerBalanceService.findCustomerBalanceById(customerId));
     }
 
-    @GetMapping("/{id}/get-balance-amount/")
-    public ResponseEntity<BigDecimal> getBalanceAmountByUserId (@RequestHeader(value = "Authorization") String id,
+    @GetMapping("/get-balance/{id}")
+    public ResponseEntity<CustomerBalance> getBalanceByUserId (@RequestHeader(value = "Authorization") String id,
                                                                 @PathVariable("id") Long userId) throws IllegalAccessException{
-        BigDecimal amount = customerBalanceService.getCustomerBalanceAmountById(userId);
-        return ResponseEntity.ok(amount);
+        CustomerBalance customerBalance = customerBalanceService.findCustomerBalanceById(userId);
+        return ResponseEntity.ok(customerBalance);
     }
 
     @PutMapping("/top-up")

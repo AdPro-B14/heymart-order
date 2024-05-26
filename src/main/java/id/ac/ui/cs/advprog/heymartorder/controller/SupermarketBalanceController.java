@@ -39,14 +39,14 @@ public class SupermarketBalanceController {
         return ResponseEntity.ok(supermarketBalanceService.findSupermarketBalanceById(supermarketId));
     }
     
-    @GetMapping("/{id}/get-balance")
-    public ResponseEntity<BigDecimal> getBalanceBySupermarketId (@RequestHeader(value = "Authorization") String id,
+    @GetMapping("/get-balance/{id}")
+    public ResponseEntity<SupermarketBalance> getBalanceBySupermarketId (@RequestHeader(value = "Authorization") String id,
                                                           @PathVariable("id") Long supermarketId) throws IllegalAccessException{
-        BigDecimal amount = supermarketBalanceService.getSupermarketBalanceAmountById(supermarketId);
-        return ResponseEntity.ok(amount);
+        SupermarketBalance supermarketBalance = supermarketBalanceService.findSupermarketBalanceById(supermarketId);
+        return ResponseEntity.ok(supermarketBalance);
     }
 
-    @PutMapping("/{id}/withdraw")
+    @PutMapping("/withdraw/{id}")
     public ResponseEntity<SupermarketBalance> withdrawBalance(@RequestHeader(value = "Authorization") String id, @PathVariable("id") Long supermarketId,
                                                       @RequestBody WithdrawBalanceRequest request)
                                                         throws IllegalAccessException, IllegalArgumentException {
