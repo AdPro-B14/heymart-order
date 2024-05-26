@@ -1,7 +1,10 @@
 package id.ac.ui.cs.advprog.heymartorder.controller;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.AddProductCouponRequest;
+import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
+import id.ac.ui.cs.advprog.heymartorder.dto.SuccessResponse;
 import id.ac.ui.cs.advprog.heymartorder.factory.ProductCouponFactory;
+import id.ac.ui.cs.advprog.heymartorder.model.ProductCoupon;
 import id.ac.ui.cs.advprog.heymartorder.model.ProductCoupon;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import id.ac.ui.cs.advprog.heymartorder.service.ProductCouponService;
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ProductCouponControllerTest {
@@ -79,6 +82,20 @@ public class ProductCouponControllerTest {
 
         assertEquals(ResponseEntity.ok(supermarketCoupons), response);
         verify(productCouponService, times(1)).findBySupermarketId(supermarketId);
+    }
+
+    @Test
+    void testGetByProductId() {
+        String productId = "36fc4221-63b2-4fe6-8ce7-a267da361138";
+        List<ProductCoupon> productCoupons = new ArrayList<>();
+        productCoupons.add(tcCoupons.getFirst());
+
+        when(productCouponService.findByProductId(productId)).thenReturn(productCoupons);
+
+        ResponseEntity<List<ProductCoupon>> response = productCouponController.getProductCouponByProductId(productId);
+
+        assertEquals(ResponseEntity.ok(productCoupons), response);
+        verify(productCouponService, times(1)).findByProductId(productId);
     }
 
     @Test
@@ -149,5 +166,67 @@ public class ProductCouponControllerTest {
         assertEquals(pCoupon, responseEntity.getBody());
     }
 
+    @Test
+    void testCreateProductCouponUnauthorizedAccess() {
+        String token = "invalidToken";
+        String id = "Bearer " + token;
+
+        AddProductCouponRequest request = AddProductCouponRequest.builder()
+                .supermarketId(123L)
+                .couponName("Discount 2024")
+                .couponNominal(1000L)
+                .productId("eb558e9f-1c39-460e-8860-71af6af63bd7")
+                .build();
+        when(jwtService.extractRole(token)).thenReturn("customer");
+
+        assertThrows(IllegalAccessException.class, () -> productCouponController.addProductCoupon(id, request));
+    }
+
+    @DeleteMapping("/delete-product-coupon/{id}")
+    public ResponseEntity<SuccessResponse> deleteProductCoupon(@RequestHeader(value = "Authorization") String id,
+                                                               @PathVariable("id") String couponId) throws IllegalAccessException {
+        String token = id.replace("Bearer ", "");
+        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")
+                && !jwtService.extractRole(token).equalsIgnoreCase("admin")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+
+        productCouponService.delete(couponId);
+        return ResponseEntity.ok(SuccessResponse.builder().success(true).build());
+    }
+
+    @Test
+    void testDeleteProductCoupon() throws IllegalAccessException {
+        String token = "validToken";
+        String id = "Bearer " + token;
+        Long managerId = 1L;
+        when(jwtService.extractUserId(token)).thenReturn(managerId);
+        when(jwtService.extractRole(token)).thenReturn("manager");
+
+        ProductCoupon pCoupon = tcCoupons.getFirst();
+
+        ResponseEntity<SuccessResponse> responseEntity = productCouponController.deleteProductCoupon(token, pCoupon.getCouponId());
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(productCouponService, times(1)).delete(pCoupon.getCouponId());
+    }
+
+    @Test
+    void testDeleteProductCouponUnauthorizedAccess()  {
+        String token = "invalidToken";
+        String id = "Bearer " + token;
+        Long customerId = 1L;
+        when(jwtService.extractUserId(token)).thenReturn(customerId);
+        when(jwtService.extractRole(token)).thenReturn("customer");
+
+        ProductCoupon pCoupon = tcCoupons.getFirst();
+
+        assertThrows(IllegalAccessException.class, () -> productCouponController.deleteProductCoupon(token, pCoupon.getCouponId()));
+    }
+
+    @Test
+    void testToStringForBuilder() {
+        assertTrue(AddProductCouponRequest.builder().toString().contains("AddProductCouponRequest.AddProductCouponRequestBuilder"));
+    }
 
 }

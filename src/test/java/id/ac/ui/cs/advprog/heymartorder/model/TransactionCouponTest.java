@@ -72,4 +72,8 @@ public class TransactionCouponTest {
         assertTrue(transactionCoupon instanceof Coupon);
     }
 
+    @Test
+    void testToString() {
+        assertTrue(tcCoupons.getFirst().toString().contains("TransactionCoupon("));
+    }
 }

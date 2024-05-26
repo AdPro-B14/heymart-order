@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.heymartorder.controller;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
 import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
+import id.ac.ui.cs.advprog.heymartorder.dto.SuccessResponse;
 import id.ac.ui.cs.advprog.heymartorder.factory.TransactionCouponFactory;
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TransactionCouponControllerTest {
@@ -119,5 +120,58 @@ public class TransactionCouponControllerTest {
         assertEquals(tcCoupon, responseEntity.getBody());
     }
 
+    @Test
+    void testCreateTransactionCouponUnauthorizedAccess() {
+        String token = "invalidToken";
+        String id = "Bearer " + token;
 
+        AddTransactionCouponRequest request = AddTransactionCouponRequest.builder()
+                .supermarketId(123L)
+                .couponName("Discount 2024")
+                .couponNominal(10000L)
+                .minimumBuy(50000L)
+                .build();
+        when(jwtService.extractRole(token)).thenReturn("customer");
+
+        assertThrows(IllegalAccessException.class, () -> transactionCouponController.addTransactionCoupon(id, request));
+    }
+
+    @Test
+    void testDeleteTransactionCoupon() throws IllegalAccessException {
+        String token = "validToken";
+        String id = "Bearer " + token;
+        Long managerId = 1L;
+        when(jwtService.extractUserId(token)).thenReturn(managerId);
+        when(jwtService.extractRole(token)).thenReturn("manager");
+
+        TransactionCoupon pCoupon = tcCoupons.getFirst();
+
+        ResponseEntity<SuccessResponse> responseEntity = transactionCouponController.deleteTransactionCoupon(token, pCoupon.getCouponId());
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(transactionCouponService, times(1)).delete(pCoupon.getCouponId());
+    }
+
+    @Test
+    void testDeleteTransactionCouponUnauthorizedAccess() throws IllegalAccessException {
+        String token = "invalidToken";
+        String id = "Bearer " + token;
+        Long customerId = 1L;
+        when(jwtService.extractUserId(token)).thenReturn(customerId);
+        when(jwtService.extractRole(token)).thenReturn("customer");
+
+        TransactionCoupon tcCoupon = tcCoupons.getFirst();
+
+        assertThrows(IllegalAccessException.class, () -> transactionCouponController.deleteTransactionCoupon(token, tcCoupon.getCouponId()));
+    }
+
+    @Test
+    void testToStringForBuilder() {
+        assertTrue(AddTransactionCouponRequest.builder().toString().contains("AddTransactionCouponRequest.AddTransactionCouponRequestBuilder"));
+    }
+
+    @Test
+    void testToStringForSuccessResponseBuilder() {
+        assertTrue(SuccessResponse.builder().toString().contains("SuccessResponse.SuccessResponseBuilder"));
+    }
 }

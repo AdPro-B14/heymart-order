@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.model;
 
+import id.ac.ui.cs.advprog.heymartorder.dto.AddTransactionCouponRequest;
 import id.ac.ui.cs.advprog.heymartorder.factory.ProductCouponFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,5 +92,9 @@ public class ProductCouponTest {
         assertTrue(productCoupon instanceof Coupon);
     }
 
+    @Test
+    void testToString() {
+        assertTrue(tcCoupons.getFirst().toString().contains("ProductCoupon("));
+    }
 
 }
