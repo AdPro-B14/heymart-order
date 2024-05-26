@@ -17,4 +17,6 @@ public interface CustomerBalanceService {
 
     CustomerBalance topUp(Long id, BigDecimal amount);
 
+    CustomerBalance calculateAtCheckout(Long id, Long total);
+
 }

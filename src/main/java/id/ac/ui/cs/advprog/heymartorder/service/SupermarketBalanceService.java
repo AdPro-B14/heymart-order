@@ -11,4 +11,5 @@ public interface SupermarketBalanceService {
     boolean existsSupermarketBalanceById(Long id);
     BigDecimal getSupermarketBalanceAmountById(Long id);
     SupermarketBalance withDraw(Long id, BigDecimal amount);
+    SupermarketBalance calculateAtCheckout (Long id, Long total);
 }

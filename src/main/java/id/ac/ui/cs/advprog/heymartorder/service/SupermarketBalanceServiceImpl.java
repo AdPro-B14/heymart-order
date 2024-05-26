@@ -56,7 +56,7 @@ public class SupermarketBalanceServiceImpl implements SupermarketBalanceService 
         supermarketBalance.setAmount(newAmount);
         return supermarketBalance;
     }
-
+    @Override
     public SupermarketBalance calculateAtCheckout(Long id, Long amount) {
         return balanceStrategy.calculateAtCheckout(id, amount);
     }

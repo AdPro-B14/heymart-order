@@ -54,6 +54,7 @@ public class CustomerBalanceServiceImpl implements CustomerBalanceService {
         return customerBalance;
     }
 
+    @Override
     public CustomerBalance calculateAtCheckout(Long customerId, Long amount) {
         return balanceStrategy.calculateAtCheckout(customerId, amount);
     }

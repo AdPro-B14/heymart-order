@@ -1,8 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
-import id.ac.ui.cs.advprog.heymartorder.model.KeranjangItem;
-import id.ac.ui.cs.advprog.heymartorder.model.ProductCoupon;
-import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
+import id.ac.ui.cs.advprog.heymartorder.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +19,12 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Autowired
     private ProductCouponServiceImpl productCouponService;
+
+    @Autowired
+    private CustomerBalanceService customerBalanceService;
+
+    @Autowired
+    private SupermarketBalanceService supermarketBalanceService;
 
     @Override
     public boolean checkout(Long userId, String token) {
@@ -42,14 +46,14 @@ public class CheckoutServiceImpl implements CheckoutService {
     public Long checkoutWithCoupon(Long userId, String token, List<String> productCouponIds, String transactionCouponId) {
         try {
             Long total = keranjangBelanjaService.countTotal(userId, token);
-
+            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.findKeranjangById(userId);
             if (productCouponIds != null) {
                 total = applyProductCoupon(userId, token, productCouponIds);
             }
             if (transactionCouponId != null) {
                 total = applyTransactionCoupon(userId, token, transactionCouponId);
             }
-
+            processCheckoutBalance(keranjangBelanja, total);
             keranjangBelanjaService.clearKeranjang(userId);
             return total;
         } catch (Exception e) {
@@ -99,4 +103,10 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
+    public void processCheckoutBalance(KeranjangBelanja keranjangBelanja, Long total) {
+        Long customerId = keranjangBelanja.getId();
+        Long supermarketId = keranjangBelanja.getSupermarketId();
+        CustomerBalance customerBalance = customerBalanceService.calculateAtCheckout(customerId, total);
+        SupermarketBalance supermarketBalance = supermarketBalanceService.calculateAtCheckout(supermarketId, total);
+    }
 }
