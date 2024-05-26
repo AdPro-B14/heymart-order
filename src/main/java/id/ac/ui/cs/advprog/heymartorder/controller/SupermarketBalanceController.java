@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.heymartorder.controller;
 import id.ac.ui.cs.advprog.heymartorder.dto.*;
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
+import id.ac.ui.cs.advprog.heymartorder.rest.UserService;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import id.ac.ui.cs.advprog.heymartorder.service.SupermarketBalanceService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class SupermarketBalanceController {
 
     private final SupermarketBalanceService supermarketBalanceService;
     private final JwtService jwtService;
+    private final UserService userService;
 
     private final WebClient webClient;
 
@@ -39,32 +41,33 @@ public class SupermarketBalanceController {
         return ResponseEntity.ok(supermarketBalanceService.findSupermarketBalanceById(supermarketId));
     }
     
-    @GetMapping("/{id}/get-balance")
-    public ResponseEntity<BigDecimal> getBalanceBySupermarketId (@RequestHeader(value = "Authorization") String id,
+    @GetMapping("/get-balance/{id}")
+    public ResponseEntity<SupermarketBalance> getBalanceBySupermarketId (@RequestHeader(value = "Authorization") String id,
                                                           @PathVariable("id") Long supermarketId) throws IllegalAccessException{
-        BigDecimal amount = supermarketBalanceService.getSupermarketBalanceAmountById(supermarketId);
-        return ResponseEntity.ok(amount);
+        SupermarketBalance supermarketBalance = supermarketBalanceService.findSupermarketBalanceById(supermarketId);
+        return ResponseEntity.ok(supermarketBalance);
     }
 
-    @PutMapping("/{id}/withdraw")
-    public ResponseEntity<SupermarketBalance> withdrawBalance(@RequestHeader(value = "Authorization") String id, @PathVariable("id") Long supermarketId,
+    @GetMapping("/get-manager-balance/")
+    public ResponseEntity<SupermarketBalance> getBalanceBySupermarketIdForManager (@RequestHeader(value = "Authorization") String id) throws IllegalAccessException{
+        String token = id.replace("Bearer ", "");
+        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")) {
+            throw new IllegalAccessException("You have no access.");
+        }
+        Long supermarketId = userService.getProfile(token).manager_supermarket_id;
+        SupermarketBalance supermarketBalance = supermarketBalanceService.findSupermarketBalanceById(supermarketId);
+        return ResponseEntity.ok(supermarketBalance);
+    }
+
+    @PutMapping("/withdraw")
+    public ResponseEntity<SupermarketBalance> withdrawBalance(@RequestHeader(value = "Authorization") String id,
                                                       @RequestBody WithdrawBalanceRequest request)
                                                         throws IllegalAccessException, IllegalArgumentException {
         String token = id.replace("Bearer ", "");
-        String managerEmail = jwtService.extractEmail(token);
-        GetSupermarketResponse supermarketResponse = webClient.get()
-                .uri(GATEWAY_URL + "/api/store/supermarket/supermarket",
-                        uriBuilder -> uriBuilder.queryParam("id", supermarketId).build())
-                .retrieve()
-                .bodyToMono(GetSupermarketResponse.class)
-                .block();
-        assert supermarketResponse != null;
-        List<String> managers = supermarketResponse.getManagerEmails();
-        boolean userManageSupermarket = managers.contains(managerEmail);
-        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")
-                || !userManageSupermarket) {
+        if (!jwtService.extractRole(token).equalsIgnoreCase("manager")) {
             throw new IllegalAccessException("You have no access.");
         }
+        Long supermarketId = userService.getProfile(token).manager_supermarket_id;
         SupermarketBalance supermarketBalance = supermarketBalanceService.
                 withDraw(supermarketId, request.getAmount());
         return ResponseEntity.ok(supermarketBalance);

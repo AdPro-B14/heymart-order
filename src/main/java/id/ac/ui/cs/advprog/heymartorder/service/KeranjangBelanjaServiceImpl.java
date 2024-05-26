@@ -2,18 +2,18 @@ package id.ac.ui.cs.advprog.heymartorder.service;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.GetProductResponse;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanja;
-import id.ac.ui.cs.advprog.heymartorder.model.KeranjangBelanjaBuilder;
 import id.ac.ui.cs.advprog.heymartorder.model.KeranjangItem;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangBelanjaRepository;
 import id.ac.ui.cs.advprog.heymartorder.repository.KeranjangItemRepository;
+import id.ac.ui.cs.advprog.heymartorder.rest.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
@@ -26,6 +26,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private KeranjangLogService logService;
 
     @Override
     public KeranjangBelanja createKeranjangBelanja(Long userId) {
@@ -53,11 +56,14 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
         items.clear();
         keranjangBelanja.setSupermarketId(null);
 
+        CompletableFuture<Void> logFuture = logService.logCartCleared(userId);
+        logFuture.join();
+
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
     @Override
-    public KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId) {
+    public synchronized KeranjangBelanja addProductToKeranjang(Long userId, String productId, Long supermarketId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
 
@@ -67,7 +73,7 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             throw new IllegalArgumentException("Supermarket ID mismatch");
         }
 
-        GetProductResponse productResponse = productService.getProductById(productId);
+        GetProductResponse productResponse = productService.getProductById(productId, token);
         if (productResponse == null) {
             throw new IllegalArgumentException("Product not found");
         }
@@ -98,6 +104,9 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             newItem.setKeranjangbelanja(keranjangBelanja);
             items.add(newItem);
         }
+
+        CompletableFuture<Void> logFuture = logService.logProductAddedToCart(userId, productId);
+        logFuture.join();
 
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
@@ -130,33 +139,26 @@ public class KeranjangBelanjaServiceImpl implements KeranjangBelanjaService{
             keranjangBelanja.setSupermarketId(null);
         }
 
+        CompletableFuture<Void> logFuture = logService.logProductRemovedFromCart(userId, productId);
+        logFuture.join();
+
         return keranjangBelanjaRepository.save(keranjangBelanja);
     }
 
     @Override
-    public Long countTotal(Long userId) {
+    public Long countTotal(Long userId, String token) {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaRepository.findKeranjangBelanjaById(userId).orElseThrow();
-        Long supermarketId = keranjangBelanja.getSupermarketId();
         List<KeranjangItem> items = keranjangBelanja.getListKeranjangItem();
-
-        List<GetProductResponse> products = productService.getAllProduct(supermarketId);
-        Map<String, Long> productPriceMap = products.stream()
-                .collect(Collectors.toMap(GetProductResponse::getUUID, GetProductResponse::getPrice));
 
         long total = 0L;
         for (KeranjangItem item : items) {
-            Long price = productPriceMap.get(item.getProductId());
+            GetProductResponse product = productService.getProductById(item.getProductId(), token);
+            Long price = product.getPrice();
             if (price != null) {
                 total += price * item.getAmount();
             }
         }
 
         return total;
-    }
-
-    @Override
-    public boolean checkout() {
-        // todo kurangin stok
-        return false;
     }
 }

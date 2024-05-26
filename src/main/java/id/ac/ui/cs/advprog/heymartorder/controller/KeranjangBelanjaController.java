@@ -61,10 +61,10 @@ public class KeranjangBelanjaController {
         }
         Long userId = jwtService.extractUserId(jwt);
         try {
-            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.addProductToKeranjang(userId, request.productId, request.supermarketId);
+            KeranjangBelanja keranjangBelanja = keranjangBelanjaService.addProductToKeranjang(userId, request.productId, request.supermarketId, jwt);
             return ResponseEntity.ok(keranjangBelanja);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Supermarket Id Mismatch");
+            throw new IllegalArgumentException();
         }
 
     }
@@ -94,5 +94,14 @@ public class KeranjangBelanjaController {
         KeranjangBelanja keranjangBelanja = keranjangBelanjaService.clearKeranjang(userId);
 
         return ResponseEntity.ok(keranjangBelanja);
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalBelanja(@RequestHeader(value = "Authorization") String token) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        Long userId = jwtService.extractUserId(jwt);
+
+        long totalBelanja = keranjangBelanjaService.countTotal(userId, jwt);
+        return ResponseEntity.ok(totalBelanja);
     }
 }

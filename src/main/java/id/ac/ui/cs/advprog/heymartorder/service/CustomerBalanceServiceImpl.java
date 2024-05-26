@@ -46,14 +46,13 @@ public class CustomerBalanceServiceImpl implements CustomerBalanceService {
     public CustomerBalance topUp(Long id, BigDecimal amount) {
         CustomerBalance customerBalance = findCustomerBalanceById(id);
         BigDecimal currentAmount = customerBalance.getAmount();
-        if (amount.compareTo(currentAmount) > 0) {
-            throw new IllegalArgumentException();
-        }
         BigDecimal newAmount = currentAmount.add(amount);
         customerBalance.setAmount(newAmount);
+        customerBalanceRepository.save(customerBalance);
         return customerBalance;
     }
 
+    @Override
     public CustomerBalance calculateAtCheckout(Long customerId, Long amount) {
         return balanceStrategy.calculateAtCheckout(customerId, amount);
     }
