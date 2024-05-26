@@ -7,9 +7,7 @@ import java.util.List;
 public class TransactionCouponFactory {
 
     public TransactionCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
-        TransactionCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, minimumBuy);
-        coupon.prepare();
-        return coupon;
+        return createCoupon(supermarketId, couponName, couponNominal, minimumBuy);
     }
     public TransactionCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, Long minimumBuy) {
         if (couponNominal <= 0) {

@@ -30,5 +30,4 @@ public abstract class Coupon {
 
     }
 
-    public abstract void prepare();
 }

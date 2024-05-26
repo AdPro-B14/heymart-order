@@ -6,9 +6,7 @@ import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 public class ProductCouponFactory {
 
     public ProductCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
-        ProductCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, productId);
-        coupon.prepare();
-        return coupon;
+        return createCoupon(supermarketId, couponName, couponNominal, productId);
     }
     public ProductCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
         if (couponNominal <= 0) {

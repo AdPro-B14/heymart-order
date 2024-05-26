@@ -27,8 +27,4 @@ public class TransactionCoupon extends Coupon {
         super();
     }
 
-    @Override
-    public void prepare() {
-        // Implementation of prepare method
-    }
 }
