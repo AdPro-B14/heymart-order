@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.heymartorder.service;
 
+import id.ac.ui.cs.advprog.heymartorder.exception.InsufficientBalanceException;
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
@@ -49,7 +50,7 @@ public class SupermarketBalanceServiceImpl implements SupermarketBalanceService 
         BigDecimal currentAmount = supermarketBalance.getAmount();
 
         if (amount.compareTo(currentAmount) > 0) {
-            throw new IllegalArgumentException();
+            throw new InsufficientBalanceException();
         }
         BigDecimal newAmount = currentAmount.subtract(amount);
         supermarketBalance.setAmount(newAmount);
