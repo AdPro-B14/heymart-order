@@ -55,11 +55,7 @@ public class TransactionCouponControllerTest {
 
     }
 
-    @GetMapping("/transaction-coupon/{id}")
-    public ResponseEntity<TransactionCoupon> getTransactionCoupon(@PathVariable("id") String couponId) {
-        TransactionCoupon tcCoupon = transactionCouponService.findById(couponId);
-        return ResponseEntity.ok(tcCoupon);
-    }
+
     @Test
     void testGetByCouponId() {
         String couponId = "eb558e9f-1c39-460e-8860-71af6af63bd0";
