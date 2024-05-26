@@ -6,13 +6,14 @@ import id.ac.ui.cs.advprog.heymartorder.model.TransactionCoupon;
 public class ProductCouponFactory {
 
     public ProductCoupon orderCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
-        ProductCoupon coupon = createCoupon(supermarketId, couponName, couponNominal, productId);
-        coupon.prepare();
-        return coupon;
+        return createCoupon(supermarketId, couponName, couponNominal, productId);
     }
     public ProductCoupon createCoupon(Long supermarketId, String couponName, Long couponNominal, String productId) {
         if (couponNominal <= 0) {
             throw new IllegalArgumentException("Coupon nominal must be greater than 0");
+        }
+        if (couponName == null) {
+            throw new IllegalArgumentException("Coupon name cant be null");
         }
         return new ProductCoupon(supermarketId, couponName, couponNominal, productId);
     }

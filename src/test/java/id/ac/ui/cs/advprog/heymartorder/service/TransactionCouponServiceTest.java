@@ -76,15 +76,28 @@ public class TransactionCouponServiceTest {
     }
 
     @Test
+    void testFindBySupermarketId() {
+        doReturn(tcCoupons).when(transactionCouponRepository).findBySupermarketId(1L);
+        List<TransactionCoupon> results = transactionCouponService.findBySupermarketId(1L);
+        assertEquals(tcCoupons, results);
+        assertEquals(2, results.size());
+    }
+
+    @Test
     void testFindAll() {
         TransactionCoupon tcCoupon = tcCoupons.get(1);
         doReturn(tcCoupons).when(transactionCouponRepository).findAll();
 
         List<TransactionCoupon> results = transactionCouponService.findAll();
-        for (int i = 0; i< results.size(); i++) {
-            assertEquals(tcCoupons.get(i).getCouponId(), results.get(i).getCouponId());
-        }
+        assertEquals(tcCoupons, results);
         assertEquals(2, results.size());
+    }
+
+    @Test
+    void testDeleteTransactionCouponValid() {
+        tcCoupons.getFirst().setCouponId("eb558e9f-1c39-460e-8860-71af6af63bd0");
+
+        assertDoesNotThrow(() -> transactionCouponService.delete(tcCoupons.getFirst().getCouponId()));
     }
 
     @Test
