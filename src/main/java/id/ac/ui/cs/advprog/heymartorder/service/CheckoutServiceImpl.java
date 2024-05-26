@@ -27,22 +27,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     private SupermarketBalanceService supermarketBalanceService;
 
     @Override
-    public boolean checkout(Long userId, String token) {
-        try {
-            Long total = keranjangBelanjaService.countTotal(userId, token);
-
-            /*
-            TODO
-             */
-
-            keranjangBelanjaService.clearKeranjang(userId);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
     public Long checkoutWithCoupon(Long userId, String token, List<String> productCouponIds, String transactionCouponId) {
         try {
             Long total = keranjangBelanjaService.countTotal(userId, token);
@@ -61,6 +45,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
+    @Override
     public Long applyProductCoupon(Long userId, String token, List<String> productCouponIds) {
         try {
             Long couponSum = 0L;
@@ -88,6 +73,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
+    @Override
     public Long applyTransactionCoupon(Long userId, String token, String transactionCouponId) {
         try {
             Long currentTotal = keranjangBelanjaService.countTotal(userId, token);
@@ -103,6 +89,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
+    @Override
     public void processCheckoutBalance(KeranjangBelanja keranjangBelanja, Long total) {
         Long customerId = keranjangBelanja.getId();
         Long supermarketId = keranjangBelanja.getSupermarketId();
