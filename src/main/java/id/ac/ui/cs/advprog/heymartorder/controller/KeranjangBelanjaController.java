@@ -95,4 +95,13 @@ public class KeranjangBelanjaController {
 
         return ResponseEntity.ok(keranjangBelanja);
     }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalBelanja(@RequestHeader(value = "Authorization") String token) throws IllegalAccessException {
+        String jwt = token.replace("Bearer ", "");
+        Long userId = jwtService.extractUserId(jwt);
+
+        long totalBelanja = keranjangBelanjaService.countTotal(userId, jwt);
+        return ResponseEntity.ok(totalBelanja);
+    }
 }
