@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.heymartorder.controller;
 
 import id.ac.ui.cs.advprog.heymartorder.dto.WithdrawBalanceRequest;
+import id.ac.ui.cs.advprog.heymartorder.model.SupermarketBalance;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import id.ac.ui.cs.advprog.heymartorder.service.SupermarketBalanceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,17 +35,16 @@ class SupermarketBalanceControllerTest {
     }
 
     @Test
-    void testGetBalanceBySupermarketId() throws IllegalAccessException {
-        String token = "validToken";
-        String id = "Bearer " + token;
+    public void testGetBalanceBySupermarketId() throws IllegalAccessException {
+        String token = "Bearer valid_token";
         Long supermarketId = 1L;
-        BigDecimal balanceAmount = BigDecimal.valueOf(100.00);
+        SupermarketBalance expectedBalance = supermarketBalanceService.createSupermarketBalance(supermarketId);
+        when(supermarketBalanceService.findSupermarketBalanceById(supermarketId)).thenReturn(expectedBalance);
+        when(jwtService.extractRole("valid_token")).thenReturn("admin");
 
-        when(supermarketBalanceService.getSupermarketBalanceAmountById(supermarketId)).thenReturn(balanceAmount);
-
-        ResponseEntity<BigDecimal> response = supermarketBalanceController.getBalanceBySupermarketId(id, supermarketId);
+        ResponseEntity<SupermarketBalance> response = supermarketBalanceController.getBalanceBySupermarketId(token, supermarketId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(balanceAmount, response.getBody());
+        assertEquals(expectedBalance, response.getBody());
     }
 }
