@@ -54,6 +54,7 @@ public class SupermarketBalanceServiceImpl implements SupermarketBalanceService 
         }
         BigDecimal newAmount = currentAmount.subtract(amount);
         supermarketBalance.setAmount(newAmount);
+        supermarketBalanceRepository.save(supermarketBalance);
         return supermarketBalance;
     }
 

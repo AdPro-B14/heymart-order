@@ -65,7 +65,7 @@ public class SupermarketBalanceStrategy implements BalanceStrategy<SupermarketBa
         BigDecimal checkoutAmount = BigDecimal.valueOf(amount);
         BigDecimal updatedAmount = currentAmount.add(checkoutAmount);
         supermarketBalance.setAmount(updatedAmount);
-
+        supermarketBalanceRepository.save(supermarketBalance);
         return supermarketBalance;
     }
 }
