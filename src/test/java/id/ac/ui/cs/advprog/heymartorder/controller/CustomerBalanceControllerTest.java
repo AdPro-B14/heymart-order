@@ -77,18 +77,17 @@ class CustomerBalanceControllerTest {
     }
 
     @Test
-    void testGetBalanceAmountByUserId() throws IllegalAccessException {
-        String token = "validToken";
-        String id = "Bearer " + token;
+    public void testGetBalanceByUserId() throws IllegalAccessException {
+        String token = "Bearer valid_token";
         Long userId = 1L;
-        BigDecimal balanceAmount = BigDecimal.valueOf(100.00);
+        CustomerBalance expectedBalance = customerBalanceService.createCustomerBalance(userId);
+        when(customerBalanceService.findCustomerBalanceById(userId)).thenReturn(expectedBalance);
+        when(jwtService.extractRole("valid_token")).thenReturn("customer");
 
-        when(customerBalanceService.getCustomerBalanceAmountById(userId)).thenReturn(balanceAmount);
-
-        ResponseEntity<BigDecimal> response = customerBalanceController.getBalanceAmountByUserId(id, userId);
+        ResponseEntity<CustomerBalance> response = customerBalanceController.getBalanceByUserId(token, userId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(balanceAmount, response.getBody());
+        assertEquals(expectedBalance, response.getBody());
     }
 
     @Test
