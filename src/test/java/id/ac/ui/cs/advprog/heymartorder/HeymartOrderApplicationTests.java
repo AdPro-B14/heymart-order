@@ -5,9 +5,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = HeymartOrderApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HeymartOrderApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
 }
