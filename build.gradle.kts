@@ -59,7 +59,6 @@ dependencies {
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 }
 
-
 tasks.register<Test>("unitTest") {
 	description = "Runs unit tests."
 	group = "verification"
