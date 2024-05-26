@@ -304,18 +304,16 @@ class KeranjangBelanjaServiceImplTest {
 
         when(keranjangBelanjaRepository.findKeranjangBelanjaById(userId)).thenReturn(Optional.of(keranjangBelanja));
 
-        List<GetProductResponse> products = new ArrayList<>();
         GetProductResponse product1 = new GetProductResponse();
         product1.setUUID("123");
         product1.setPrice(50L);
-        products.add(product1);
 
         GetProductResponse product2 = new GetProductResponse();
         product2.setUUID("456");
         product2.setPrice(100L);
-        products.add(product2);
 
-        when(productService.getAllProduct(supermarketId, token)).thenReturn(products);
+        when(productService.getProductById("123", token)).thenReturn(product1);
+        when(productService.getProductById("456", token)).thenReturn(product2);
 
         long total = keranjangBelanjaService.countTotal(userId, token);
 
