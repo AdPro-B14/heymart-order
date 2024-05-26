@@ -4,13 +4,10 @@ import id.ac.ui.cs.advprog.heymartorder.dto.*;
 import id.ac.ui.cs.advprog.heymartorder.service.CustomerBalanceService;
 import id.ac.ui.cs.advprog.heymartorder.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/customer-balance")
@@ -24,7 +21,7 @@ public class CustomerBalanceController {
 
     private final WebClient webClient;
 
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public ResponseEntity<CustomerBalance> createBalance (@RequestHeader(value="Authorization") String id)
             throws IllegalAccessException {
         String token = id.replace("Bearer ", "");
