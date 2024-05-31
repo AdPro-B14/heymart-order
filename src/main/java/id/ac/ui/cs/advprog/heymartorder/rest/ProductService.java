@@ -14,7 +14,7 @@ public class ProductService {
     private final WebClient webClient;
 
     public ProductService(@Value("${spring.route.gateway_url}") String productUrl) {
-        this.webClient = WebClient.builder().baseUrl(productUrl + "/api/store/product").build();
+        this.webClient = WebClient.builder().baseUrl("https://heymart-store-production-qwmmsp4gka-et.a.run.app/product").build();
     }
 
     public List<GetProductResponse> getAllProduct(Long supermarketId, String token) {
