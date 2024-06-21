@@ -19,7 +19,6 @@ public abstract class Coupon {
     long couponNominal;
 
 
-    // supermarketId
     Coupon(Long supermarketId, String couponName, long couponNominal) {
         this.supermarketId = supermarketId;
         this.couponName = couponName;

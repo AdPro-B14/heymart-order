@@ -17,5 +17,4 @@ public class ProductCouponFactory {
         }
         return new ProductCoupon(supermarketId, couponName, couponNominal, productId);
     }
-
 }
